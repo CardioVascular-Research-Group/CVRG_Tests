@@ -2,6 +2,8 @@ package edu.jhu.cvrg.waveformtests;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,12 +42,16 @@ public class TestProperties {
 	}
 	
 	public void loadConfiguration(String locationPath) {
-		propsLocation = locationPath;
+		File file = new File(locationPath);
+		
+		propsLocation = file.getAbsolutePath();
+		
+		System.out.println(propsLocation);
 		
 		Properties props = new Properties();
 		
 		try {
-			InputStream tStream = TestProperties.class.getResourceAsStream(propsLocation);
+			InputStream tStream = new FileInputStream(propsLocation);
 			
 			props.load(tStream);
 			

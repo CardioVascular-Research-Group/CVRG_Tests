@@ -27,6 +27,8 @@ public class TestController {
 		String password = args[2];
 		String propertiesLocation = args[4];
 		
+		System.out.println(propertiesLocation);
+		
 		TestProperties testProps = TestProperties.getInstance();
 		
 		LogfileManager logger = LogfileManager.getInstance();

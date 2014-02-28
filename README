@@ -5,7 +5,7 @@ now only Firefox is supported.
 
 This can either be compiled as an executable jar or run as a project within eclipse.
 
-First, acquire the Selenium libraries and their dependencies from the jars folder in Dropbox.  Copy the WaveformTests-dependencies folder into the projects-dependencies folder in liferay
+First, acquire the Selenium libraries and their dependencies from the WaveformTests-dependencies folder in Dropbox.  Copy the WaveformTests-dependencies folder into the projects-dependencies folder in liferay
 
 If running as a standalone executable:
 
@@ -24,13 +24,13 @@ If running from within Eclipse:
 
 2)  Go to Run -> Run Configurations
 
-2)  Go to the Arguments tab
+3)  Go to the Arguments tab
 
-3)  Under the "Program Arguments" field, enter the value for each command line argument in the order presented in Step 3 of 
+4)  Under the "Program Arguments" field, enter the value for each command line argument in the order presented in Step 3 of 
 	running this project as a standalone jar.  Each argument must be on a separate line.
 	
-4)  Click Apply, and then click Run.
+5)  Click Apply, and then click Run.
 
-After the initial configuartion is set up, all that is required is to run the program through Eclipse.  This also allows for 
+After the initial configuration is set up, all that is required is to run the program through Eclipse.  This also allows for 
 running in debug mode as well.  To change the command line arguments simply return to the Run COnfigurations screen and follow the steps
 above.
