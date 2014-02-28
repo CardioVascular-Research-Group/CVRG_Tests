@@ -1,0 +1,56 @@
+<project name="WaveformTests" basedir="." default="jar">
+	
+	<property name="liferay" value="/opt/liferay" />
+	<property name="dependencies" value="${liferay}/projects-dependencies" />
+	<property name="selenium-jars" value="${dependencies}/${ant.project.name}-dependencies" />
+	<property name="destination" value="/opt/liferay/testing" />
+	
+	<path id="project-classpath">
+		<fileset dir="${selenium-jars}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<pathconvert property="manifest.classpath" pathsep=" ">
+	  <path refid="project-classpath"/>
+	  <mapper>
+	    <chainedmapper>
+	       <flattenmapper/>
+	       <globmapper from="*.jar" to="${selenium-jars}/*.jar"/>
+	    </chainedmapper>
+	  </mapper>
+	</pathconvert>
+	
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile" depends="clean">
+    	   	
+    	<mkdir dir="build"/>
+        <mkdir dir="build/classes"/>
+        <javac includeantruntime="false" classpathref="project-classpath" srcdir="src" destdir="build/classes" target="1.5" debug="true">
+        	<compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+    	<jar destfile="WaveformTests.jar" basedir="build/classes" filesetmanifest="mergewithoutmain">
+    		<manifest>
+    			<attribute name="Main-Class" value="edu.jhu.cvrg.waveformtests.TestController" />
+    			<attribute name="Class-Path" value="${manifest.classpath}"/>
+    		</manifest>
+    	</jar>
+    	<antcall target="clean"/>
+    	
+    	<mkdir dir="${destination}" />
+    	<delete file="${destination}/WaveformTests.jar"></delete>
+    	
+    	<copy todir="${destination}" file="./src/testconfig/site_properties.config" />
+		<copy todir="${destination}" file="./WaveformTests.jar" />
+
+    	<delete file="WaveformTests.jar"></delete>
+    	
+    </target>
+	
+</project>
