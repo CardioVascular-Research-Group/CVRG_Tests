@@ -41,7 +41,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 			
 			// log resulting message here
 			if(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[@class='ui-messages-info-summary']")).apply(portletDriver).isDisplayed()) {
-				portletLogMessages.add("The analysis was successful");
+				portletLogMessages.add("The analysis was successful:  " + portletDriver.findElement(By.xpath("//span[@class='ui-messages-info-summary']")).getText());
 				logger.incrementAnalyzeSuccess();
 			}
 			else if(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[@class='ui-messages-error-summary']")).apply(portletDriver).isDisplayed()) {
@@ -138,7 +138,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 				}
 			}
 			
-			checkBoxes.get(1).click();
+			checkBoxes.get(7).click();
 		
 	}
 

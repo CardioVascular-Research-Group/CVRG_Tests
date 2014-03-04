@@ -5,12 +5,17 @@ package edu.jhu.cvrg.waveformtests.upload;
 
 import java.util.concurrent.TimeUnit;
 import java.awt.Robot;
+import java.io.IOException;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.waveformtests.BaseFunctions;
+import edu.jhu.cvrg.waveformtests.LogfileManager;
+import edu.jhu.cvrg.waveformtests.TestNameEnum;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
 /**
@@ -32,41 +37,53 @@ public class UploadTester extends BaseFunctions implements UIComponentChecks{
 		// TODO More code may be required here in the future
 	}
 	
-	public void uploadFile() {
+	public void uploadFile() throws IOException {
 		String newFolderBox = "A0684:formUpload:txtFoldername";
 		String addFolder = "A0684:formUpload:btnAdd";
 		String uploadFolderLocation = "SeleniumTest";
 		
-		// Test uploading to a new folder
-		
-		WebElement newFolderInput = portletDriver.findElement(By.id(newFolderBox));
-		
-		newFolderInput.clear();
-		newFolderInput.sendKeys(uploadFolderLocation);
-		
-		portletDriver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-		
-		portletDriver.findElement(By.id(addFolder)).click();
-		
-		portletDriver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		try {
+			// Test creating a new folder
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			WebElement newFolderInput = portletDriver.findElement(By.id(newFolderBox));
+			
+			newFolderInput.clear();
+			
+			portletLogMessages.add("The Text Input for the new folder creation has been successfully cleared");
+			logger.incrementUploadSuccess();
+			
+			newFolderInput.sendKeys(uploadFolderLocation);
+			
+			portletLogMessages.add("Entering name in the the Text Input has been successful");
+			logger.incrementUploadSuccess();
+			
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			portletDriver.findElement(By.id(addFolder)).click();
+			
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			portletLogMessages.add("New folder created");
+			logger.incrementUploadSuccess();
+			
+		} catch (NoSuchElementException ne) {
+			seleniumLogMessages.add("An element was not found in the DOM in Analysis Algorithms, here is more information:  " + LogfileManager.extractStackTrace(ne));
+			logger.incrementUploadFails();
+		} catch (StaleElementReferenceException se) {
+			seleniumLogMessages.add("An element was trying to be accessed but it most likely got refreshed since the last time the page updated.\n  This is due to the fact that elements are dynamically removed and recreated, so even if they have the same characteristics it is still a new element.\n  Here is more information:  " + LogfileManager.extractStackTrace(se));
+			logger.incrementUploadFails();
+		} finally {
+			logger.addToLog(portletLogMessages, TestNameEnum.UPLOAD);
+			
+			if(!(seleniumLogMessages.isEmpty())) {
+				logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);
+			}
+		}
 		
 		// Test uploading to an existing folder
 	}
 	
-	private void selectFile(String folder) {
-		
-		String choose = "A0684:formUpload:uploader_input";
-		String uploadAll = "aui_3_4_0_1_807";
-		String removeAll = "aui_3_4_0_1_826";
-		
-		//portletDriver.findElement(By.id(choose)).sendKeys("");
-		
-		// The Robot class could possibly be used to directly move the cursor to the desired location within
-		// the OS dialog box
-		
-		
-	}
-
 	@Override
 	public void validateButtons() {
 		// TODO Auto-generated method stub

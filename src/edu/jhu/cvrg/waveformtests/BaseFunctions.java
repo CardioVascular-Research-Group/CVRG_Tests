@@ -54,6 +54,7 @@ public abstract class BaseFunctions {
 		
 	}
 	
+	// To prevent access to the default constructor
 	private BaseFunctions() {
 		
 	}
