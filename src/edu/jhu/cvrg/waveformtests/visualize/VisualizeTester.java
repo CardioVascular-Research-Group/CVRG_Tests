@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import edu.jhu.cvrg.waveformtests.BaseFunctions;
-import edu.jhu.cvrg.waveformtests.TestProperties;
+import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.waveformtests.WaveformTestProperties;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
 /**
@@ -21,7 +21,7 @@ import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	
 	private DisplayPanelEnum currentPage;
-	private TestProperties testProps;
+	private WaveformTestProperties testProps;
 
 	/**
 	 * @param site
@@ -36,7 +36,7 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 		super(site, viewPath, welcomePath, userName, passWord);
 		
 		currentPage = DisplayPanelEnum.INITIAL;
-		testProps = TestProperties.getInstance();
+		testProps = WaveformTestProperties.getInstance();
 		
 	}
 	

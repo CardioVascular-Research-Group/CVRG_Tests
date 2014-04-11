@@ -12,8 +12,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import edu.jhu.cvrg.waveformtests.BaseFunctions;
-import edu.jhu.cvrg.waveformtests.LogfileManager;
+import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.waveformtests.TestNameEnum;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 

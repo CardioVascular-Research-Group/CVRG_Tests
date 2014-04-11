@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Selenium Libraries"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Selenium-libraries"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

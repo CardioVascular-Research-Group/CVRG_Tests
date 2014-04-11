@@ -1,4 +1,4 @@
-package edu.jhu.cvrg.waveformtests;
+package edu.jhu.cvrg.seleniummain;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+
+import edu.jhu.cvrg.waveformtests.TestNameEnum;
 
 public class LogfileManager {
 

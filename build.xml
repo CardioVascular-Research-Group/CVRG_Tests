@@ -1,4 +1,4 @@
-<project name="WaveformTests" basedir="." default="jar">
+<project name="CVRG_Tests" basedir="." default="jar">
 	
 	<property name="liferay" value="/opt/liferay" />
 	<property name="dependencies" value="${liferay}/projects-dependencies" />
@@ -35,7 +35,7 @@
     </target>
 
     <target name="jar" depends="compile">
-    	<jar destfile="WaveformTests.jar" basedir="build/classes" filesetmanifest="mergewithoutmain">
+    	<jar destfile="${ant.project.name}.jar" basedir="build/classes" filesetmanifest="mergewithoutmain">
     		<manifest>
     			<attribute name="Main-Class" value="edu.jhu.cvrg.waveformtests.TestController" />
     			<attribute name="Class-Path" value="${manifest.classpath}"/>
@@ -44,12 +44,13 @@
     	<antcall target="clean"/>
     	
     	<mkdir dir="${destination}" />
-    	<delete file="${destination}/WaveformTests.jar"></delete>
+    	<delete file="${destination}/${ant.project.name}.jar"></delete>
     	
-    	<copy todir="${destination}" file="./src/testconfig/site_properties.config" />
-		<copy todir="${destination}" file="./WaveformTests.jar" />
+    	<copy todir="${destination}" file="./src/testconfig/global_properties.config" />
+    	<copy todir="${destination}" file="./src/testconfig/waveform_properties.config" />
+		<copy todir="${destination}" file="./${ant.project.name}.jar" />
 
-    	<delete file="WaveformTests.jar"></delete>
+    	<delete file="${ant.project.name}.jar"></delete>
     	
     </target>
 	

@@ -1,6 +1,6 @@
 package edu.jhu.cvrg.waveformtests.download;
 
-import edu.jhu.cvrg.waveformtests.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BaseFunctions;
 
 public class DownloadTester extends BaseFunctions {
 

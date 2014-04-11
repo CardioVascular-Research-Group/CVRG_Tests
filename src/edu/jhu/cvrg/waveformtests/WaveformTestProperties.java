@@ -8,9 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class TestProperties {
+public class WaveformTestProperties {
 
-	private static final TestProperties test = new TestProperties();
+	private static final WaveformTestProperties test = new WaveformTestProperties();
 	private String propsLocation;
 	private String uploadPath;
 	private String visualizePath;
@@ -33,11 +33,11 @@ public class TestProperties {
 	private String jumpToMulti;
 	private String secondsBoxMulti;
 	
-	private TestProperties() {
+	private WaveformTestProperties() {
        
 	}
 	
-	public static TestProperties getInstance() {
+	public static WaveformTestProperties getInstance() {
 		return test;
 	}
 	

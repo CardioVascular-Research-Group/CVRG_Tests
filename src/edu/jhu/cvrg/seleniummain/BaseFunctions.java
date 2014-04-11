@@ -2,7 +2,7 @@
  * This package contains the basic tests and functions common to all portlet.  It is also where the main function that runs
  * the test suite resides.
  */
-package edu.jhu.cvrg.waveformtests;
+package edu.jhu.cvrg.seleniummain;
 
 /**
  * 
