@@ -40,7 +40,7 @@ public class GlobusLogin extends BaseFunctions {
 		boolean success = this.testGlobus();
 		
 		// Since this user does not exist in Liferay yet, the terms of service should show up and be tested here
-		// If it does not then record this as an error.  Do this only if login was successful.
+		// If it does not then record this as an error.  Only if login was successful.
 		if(success) {
 			
 		}
