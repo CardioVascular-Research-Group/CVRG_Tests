@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
-import edu.jhu.cvrg.waveformtests.TestNameEnum;
+import edu.jhu.cvrg.seleniummain.TestNameEnum;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
 public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
@@ -65,7 +65,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 			seleniumLogMessages.add("An element was trying to be accessed but it most likely got refreshed since the last time the page updated.\n  This is due to the fact that elements are dynamically removed and recreated, so even if they have the same characteristics it is still a new element.\n  Here is more information:  " + LogfileManager.extractStackTrace(se));
 			logger.incrementAnalyzeFails();
 		} finally {
-			logger.addToLog(portletLogMessages, TestNameEnum.ANALYZE);
+			logger.addToLog(portletLogMessages, TestNameEnum.WAVEFORMANALYZE);
 			
 			if(!(seleniumLogMessages.isEmpty())) {
 				logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);

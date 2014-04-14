@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
-import edu.jhu.cvrg.waveformtests.TestNameEnum;
+import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
 public class GlobusLogin extends BaseFunctions {
 

@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import edu.jhu.cvrg.waveformtests.TestNameEnum;
 
 public class LogfileManager {
 
@@ -57,28 +56,33 @@ public class LogfileManager {
 				logWriter.write("Tests Passed:  " + loginSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + loginFails + "\n");
 				break;
-			case UPLOAD:
+			case WAVEFORMUPLOAD:
 				logWriter.write("\n** Results from Upload **\n");
 				logWriter.write("Tests Passed:  " + uploadSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + uploadFails + "\n");
 				break;
-			case VISUALIZE:
+			case WAVEFORMVISUALIZE:
 				logWriter.write("\n** Results from Visualize **\n");
 				logWriter.write("Tests Passed:  " + visualizeSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + visualizeFails + "\n");
 				break;
-			case ANALYZE:
+			case WAVEFORMANALYZE:
 				logWriter.write("\n** Results from Analyze **\n");
 				logWriter.write("Tests Passed:  " + analyzeSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + analyzeFails + "\n");
 				break;
-			case DOWNLOAD:
+			case WAVEFORMDOWNLOAD:
 				logWriter.write("\n** Results from Download **\n");
 				logWriter.write("Tests Passed:  " + downloadSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + downloadFails + "\n");
 				break;
 			case GLOBUS:
-				logWriter.write("\n** Results from Globus Authenticator **\n");				
+				logWriter.write("\n** Results from Globus Authenticator **\n");
+				break;
+			case CEPSEARCH:
+				break;
+			case CEPUPLOAD:
+				break;
 			default:
 				logWriter.write("\n* Other Waveform Results *\n");
 		}
