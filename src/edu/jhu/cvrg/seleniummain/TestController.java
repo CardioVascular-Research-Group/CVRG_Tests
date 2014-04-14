@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import edu.jhu.cvrg.authenticationtests.GlobusLogin;
 import edu.jhu.cvrg.waveformtests.WaveformTestProperties;
 import edu.jhu.cvrg.waveformtests.analyze.AnalyzeTester;
 import edu.jhu.cvrg.waveformtests.upload.UploadTester;
@@ -12,7 +13,6 @@ import edu.jhu.cvrg.waveformtests.visualize.VisualizeTester;
 
 public class TestController {
 	
-	private WaveformTestProperties waveformProps;
 	private Calendar todaysDate;
 	private DateFormat dateFormat;
 	private LogfileManager logger;
@@ -20,6 +20,7 @@ public class TestController {
 	private String logfilePath;
 	private String username;
 	private String password;
+	private String initialWelcomePath = "web/guest/home";
 
 	/**
 	 * @param args
@@ -37,15 +38,19 @@ public class TestController {
 		String password = args[3];
 		String logfilePath = args[4];
 
-		String propertiesLocation = "";
+		String commonPropsLocation = "./src/testconfig/global_properties.config";
+		String waveformPropsLocation = "./src/testconfig/waveform_properties.config";
 		
-		System.out.println(propertiesLocation);
+		System.out.println(commonPropsLocation);
+		System.out.println(waveformPropsLocation);
+		
+		
 		
 		TestController mainControl = new TestController(hostname, logfilePath, username, password);
 		
 		switch(testType) {
 			case "LOGON":
-				mainControl.testAuthentication(propertiesLocation);
+				mainControl.testAuthentication(commonPropsLocation);
 				break;
 			case "WAVEFORM":
 				break;
@@ -64,20 +69,53 @@ public class TestController {
 		username = newUsername;
 		password = newPassword;
 		
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	}
 	
 	public void testAuthentication(String propertiesFileLocation) {
-		setup();
+		CommonProperties commonProps = CommonProperties.getInstance();
+		
+		try {
+			setup();
+			
+			commonProps.loadConfiguration(propertiesFileLocation);
+			
+			String mainUser = commonProps.getMainUser();
+			String mainPassword = commonProps.getMainPassword();
+			String newUser = commonProps.getAltUser();
+			String newPassword = commonProps.getAltPassword();
+			
+			GlobusLogin gLogin = new GlobusLogin(hostname, initialWelcomePath, initialWelcomePath, mainUser, mainPassword);
+			boolean loginComplete;
+			
+			loginComplete = gLogin.testGlobus();
+			
+			if(loginComplete) {
+				gLogin.logout();
+			}
+			gLogin.close();
+			
+			
+			loginComplete = gLogin.testGlobus(newUser, newPassword, true);
+			
+			if(loginComplete) {
+				gLogin.logout();
+			}
+			gLogin.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	public void testWaveform(String propertiesFileLocation) {
 		
 		WaveformTestProperties testProps = WaveformTestProperties.getInstance();
 		
-		setup();
-		
 		try {
+			setup();
+			
 			testProps.loadConfiguration(propertiesFileLocation);
 			
 			logger.addToLog("Waveform 3 Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
@@ -119,10 +157,19 @@ public class TestController {
 		
 	}
 	
-	private void setup() {
+	public void setUsername(String newUser) {
+		username = newUser;
+	}
+	
+	public void setPassword(String newPassword) {
+		password = newPassword;
+	}
+	
+	private void setup() throws IOException {
 		LogfileManager logger = LogfileManager.getInstance();
 		logger.setLogfileLocation(logfilePath);
 		todaysDate = Calendar.getInstance();
+		logger.addToLog("Main Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
 	}
 
 }

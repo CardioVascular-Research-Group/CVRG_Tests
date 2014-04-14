@@ -59,10 +59,16 @@ public abstract class BaseFunctions {
 		
 	}
 	
-	public void login() {
-		portletDriver.get(host + welcomeScreen);
+	public void login(boolean newWindowNeeded) {
+		if(newWindowNeeded) {
+			portletDriver = new FirefoxDriver();
+		}
+		
+		portletDriver.get(host + "/" + welcomeScreen);
 		
 		portletDriver.manage().window().maximize();
+		
+		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);	
 		
 		portletDriver.findElement(By.id("sign-in")).click();
 		
@@ -79,23 +85,26 @@ public abstract class BaseFunctions {
 		passwordBox.clear();
 		passwordBox.sendKeys(password);
 		
+		portletLogMessages.add("Logging in with username " + username);
+		
 		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		portletDriver.findElement(By.xpath("//input[@value='Sign In']")).click();
 		
 		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
-		portletDriver.get(host + portletPage);
+	}
+	
+	public void login() {
+		login(false);
 	}
 	
 	public void logout() {
-		portletDriver.findElement(By.xpath("//a[@href='/c/portal/logout']")).click();
-		portletDriver.close();
-		
+		portletDriver.findElement(By.xpath("//a[@href='/c/portal/logout']")).click();	
 	}
 	
 	public void close() {
-		
+		portletDriver.close();
 	}
 	
 	public void goToPage() {
@@ -147,6 +156,14 @@ public abstract class BaseFunctions {
 	
 	public void writeToLogfile() throws IOException {
 		
+	}
+	
+	public void setUsername (String newUser) {
+		username = newUser;
+	}
+	
+	public void setPassword (String newPassword) {
+		password = newPassword;
 	}
 	
 	public abstract void selectSingleECG();

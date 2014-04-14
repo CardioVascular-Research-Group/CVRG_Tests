@@ -37,17 +37,18 @@
     <target name="jar" depends="compile">
     	<jar destfile="${ant.project.name}.jar" basedir="build/classes" filesetmanifest="mergewithoutmain">
     		<manifest>
-    			<attribute name="Main-Class" value="edu.jhu.cvrg.waveformtests.TestController" />
+    			<attribute name="Main-Class" value="edu.jhu.cvrg.seleniummain.TestController" />
     			<attribute name="Class-Path" value="${manifest.classpath}"/>
     		</manifest>
     	</jar>
     	<antcall target="clean"/>
     	
     	<mkdir dir="${destination}" />
+    	<mkdir dir="${destination}/src/testconfig" />
     	<delete file="${destination}/${ant.project.name}.jar"></delete>
     	
-    	<copy todir="${destination}" file="./src/testconfig/global_properties.config" />
-    	<copy todir="${destination}" file="./src/testconfig/waveform_properties.config" />
+    	<copy todir="${destination}/src/testconfig" file="./src/testconfig/global_properties.config" />
+    	<copy todir="${destination}/src/testconfig" file="./src/testconfig/waveform_properties.config" />
 		<copy todir="${destination}" file="./${ant.project.name}.jar" />
 
     	<delete file="${ant.project.name}.jar"></delete>

@@ -77,6 +77,8 @@ public class LogfileManager {
 				logWriter.write("Tests Passed:  " + downloadSuccesses + "\n");
 				logWriter.write("Tests Failed:  " + downloadFails + "\n");
 				break;
+			case GLOBUS:
+				logWriter.write("\n** Results from Globus Authenticator **\n");				
 			default:
 				logWriter.write("\n* Other Waveform Results *\n");
 		}
