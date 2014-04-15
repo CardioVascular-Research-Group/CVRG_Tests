@@ -28,7 +28,7 @@ public class TestController {
 	public static void main(String[] args) {
 		
 		if(args.length != 5 || args[0].equals("--help")) {
-			System.out.println("Usage:  CVRG_Tests.jar <LOGON|WAVEFORM|CEP> <hostname> <username> <password> <logfile_location>\n");
+			System.out.println("Usage:  CVRG_Tests.jar <LOGON | WAVEFORM | CEP | ALL> <hostname> <username> <password> <logfile_location>\n");
 			System.exit(0);
 		}
 
@@ -40,9 +40,11 @@ public class TestController {
 
 		String commonPropsLocation = "./src/testconfig/global_properties.config";
 		String waveformPropsLocation = "./src/testconfig/waveform_properties.config";
+		String cepPropsLocation = "./src/testconfig/cep_properties.config";
 		
 		System.out.println(commonPropsLocation);
 		System.out.println(waveformPropsLocation);
+		System.out.println(cepPropsLocation);
 		
 		
 		
@@ -55,6 +57,8 @@ public class TestController {
 			case "WAVEFORM":
 				break;
 			case "CEP":
+				break;
+			case "ALL":
 				break;
 			default:
 				// Exit
@@ -85,7 +89,7 @@ public class TestController {
 			String newUser = commonProps.getAltUser();
 			String newPassword = commonProps.getAltPassword();
 			
-			GlobusLogin gLogin = new GlobusLogin(hostname, initialWelcomePath, initialWelcomePath, mainUser, mainPassword);
+			GlobusLogin gLogin = new GlobusLogin(hostname, initialWelcomePath, mainUser, mainPassword, true);
 			boolean loginComplete;
 			
 			loginComplete = gLogin.testGlobus();
@@ -125,7 +129,7 @@ public class TestController {
 			String welcomePath = testProps.getWelcomePath();
 			String analyzePath = testProps.getAnalyzePath();
 			
-			UploadTester upload = new UploadTester(hostname, uploadPath, welcomePath, username, password);
+			UploadTester upload = new UploadTester(hostname, uploadPath, welcomePath, username, password, true);
 			
 			
 			upload.login();
@@ -133,7 +137,7 @@ public class TestController {
 			upload.uploadFile();
 			upload.logout();
 			
-			AnalyzeTester analysis = new AnalyzeTester(hostname, analyzePath, welcomePath, username, password);
+			AnalyzeTester analysis = new AnalyzeTester(hostname, analyzePath, welcomePath, username, password, true);
 			
 			analysis.login();
 	
@@ -141,7 +145,7 @@ public class TestController {
 	
 			
 			
-			VisualizeTester visualize = new VisualizeTester(hostname, visualizePath, welcomePath, username, password);
+			VisualizeTester visualize = new VisualizeTester(hostname, visualizePath, welcomePath, username, password, true);
 			
 			visualize.login();
 			visualize.goToPage();

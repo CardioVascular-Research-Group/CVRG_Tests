@@ -48,6 +48,7 @@
     	<delete file="${destination}/${ant.project.name}.jar"></delete>
     	
     	<copy todir="${destination}/src/testconfig" file="./src/testconfig/global_properties.config" />
+    	<copy todir="${destination}/src/testconfig" file="./src/testconfig/cep_properties.config" />
     	<copy todir="${destination}/src/testconfig" file="./src/testconfig/waveform_properties.config" />
 		<copy todir="${destination}" file="./${ant.project.name}.jar" />
 

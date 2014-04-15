@@ -34,13 +34,15 @@ public abstract class BaseFunctions {
 	protected ArrayList<String> seleniumLogMessages;
 	protected WebDriver portletDriver;
 	protected LogfileManager logger = LogfileManager.getInstance();
+	protected boolean loginNeeded;
 	
-	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord) {
+	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired) {
 		host = site;
 		portletPage = viewPath;
 		welcomeScreen = welcomePath;
 		username = userName;
 		password = passWord;
+		loginNeeded = loginRequired;
 		
 		portletLogMessages = new ArrayList<String>();
 		seleniumLogMessages = new ArrayList<String>();
@@ -154,8 +156,12 @@ public abstract class BaseFunctions {
 				
 	}	
 	
-	public void writeToLogfile() throws IOException {
-		
+	public boolean loginNeeded() {
+		return loginNeeded();
+	}
+	
+	public void setLoginNeeded(boolean newFlag) {
+		loginNeeded = newFlag;
 	}
 	
 	public void setUsername (String newUser) {
@@ -165,8 +171,6 @@ public abstract class BaseFunctions {
 	public void setPassword (String newPassword) {
 		password = newPassword;
 	}
-	
-	public abstract void selectSingleECG();
 
 
 }

@@ -21,7 +21,7 @@ public interface UIComponentChecks {
 	public void validateButtons();
 	
 	/**
-	 * On some portlets, checks to make sure that entries on tables with lists get selected properly. 
-	 */
-	public void validateRecordList();
+	 * Tests the ability to select an ECG. 
+	 */	
+	public void selectSingleECG();
 }

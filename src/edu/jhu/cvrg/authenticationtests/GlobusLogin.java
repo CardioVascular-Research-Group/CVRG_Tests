@@ -12,20 +12,33 @@ import edu.jhu.cvrg.seleniummain.TestNameEnum;
 public class GlobusLogin extends BaseFunctions {
 
 	public GlobusLogin(String site, String viewPath, String welcomePath,
-			String userName, String passWord) {
-		super(site, viewPath, welcomePath, userName, passWord);
+			String userName, String passWord, boolean loginRequired) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public GlobusLogin(String site, String welcomePath,
+			String userName, String passWord, boolean loginRequired) {
+		
+		// assume that the welcome screen will be both of the paths in this case 
+		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public boolean testGlobus(boolean newWindowNeeded) throws IOException {
 		this.login(newWindowNeeded);
 		
-		boolean loginSuccess = this.checkSuccess();
+		boolean loginSuccess = this.checkInitialSuccess();
 		
 		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
 		if(loginSuccess) {
 			portletLogMessages.add("Username and password accepted, proceeding to next screen");
+			
+			// check for terms of service
+			if(!(portletDriver.findElements(By.xpath("//input[@value='I Agree']")).isEmpty())) {
+				loginSuccess = processTermsOfService();
+			}
 			
 			// check to see if the user needs to fill in the custom fields
 			if(!(portletDriver.findElements(By.id("institution")).isEmpty())) {
@@ -54,12 +67,15 @@ public class GlobusLogin extends BaseFunctions {
 				}
 				else {
 					portletLogMessages.add("Form submission successful, continuing on to login");
+					loginSuccess = true;
 					
 					// check for terms of service
+					if(!(portletDriver.findElements(By.xpath("//input[@value='I Agree']")).isEmpty())) {
+						loginSuccess = processTermsOfService();
+					}
 					
 					// log a success
 					portletLogMessages.add("Login successful");
-					loginSuccess = true;
 					
 				}
 			}
@@ -82,12 +98,6 @@ public class GlobusLogin extends BaseFunctions {
 		
 		boolean success = this.testGlobus(newWindowNeeded);
 		
-		// Since this user does not exist in Liferay yet, the terms of service should show up and be tested here
-		// If it does not then record this as an error.  Only if login was successful.
-		if(success) {
-			
-		}
-		
 		return success;
 	}
 	
@@ -95,7 +105,7 @@ public class GlobusLogin extends BaseFunctions {
 		return this.testGlobus(false);
 	}
 	
-	private boolean checkSuccess() {
+	private boolean checkInitialSuccess() {
 		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
 		// check if any login error messages appeared
@@ -108,11 +118,10 @@ public class GlobusLogin extends BaseFunctions {
 		
 		return true;
 	}
-
-	@Override
-	public void selectSingleECG() {
-		// TODO Auto-generated method stub
-
+	
+	private boolean processTermsOfService() {
+		
+		return true;
 	}
 
 }

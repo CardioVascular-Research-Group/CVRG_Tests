@@ -32,8 +32,8 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	 * @param passWord
 	 */
 	public VisualizeTester(String site, String viewPath, String welcomePath,
-			String userName, String passWord) {
-		super(site, viewPath, welcomePath, userName, passWord);
+			String userName, String passWord, boolean loginRequired) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		
 		currentPage = DisplayPanelEnum.INITIAL;
 		testProps = WaveformTestProperties.getInstance();
@@ -109,14 +109,7 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	}
 
 	@Override
-	public void validateRecordList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void selectSingleECG() {
-		// TODO Auto-generated method stub
 		List<WebElement> leafNodes = portletDriver.findElements(By.className("ui-icon-note"));
 		WebElement firstNode = leafNodes.get(0);
 		

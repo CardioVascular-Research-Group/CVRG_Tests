@@ -20,8 +20,8 @@ import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 
 	public AnalyzeTester(String site, String viewPath, String welcomePath,
-			String userName, String passWord) {
-		super(site, viewPath, welcomePath, userName, passWord);
+			String userName, String passWord, boolean loginRequired) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -73,7 +73,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 		}
 	}
 
-	@Override
+	
 	public void selectSingleECG() throws NoSuchElementException, StaleElementReferenceException{
 		
 		List<WebElement> leafNodes = portletDriver.findElements(By.className("ui-icon-note"));
@@ -85,13 +85,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 
 	@Override
 	public void validateButtons() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void validateRecordList() {
-		// Not sure if this method is even needed right now
+		// TODO validate all buttons and checkboxes
 		
 	}
 	

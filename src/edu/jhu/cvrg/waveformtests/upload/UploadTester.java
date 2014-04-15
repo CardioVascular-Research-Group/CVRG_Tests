@@ -22,7 +22,7 @@ import edu.jhu.cvrg.waveformtests.UIComponentChecks;
  * @author bbenite1
  *
  */
-public class UploadTester extends BaseFunctions implements UIComponentChecks{
+public class UploadTester extends BaseFunctions {
 
 	/**
 	 * @param site
@@ -31,8 +31,8 @@ public class UploadTester extends BaseFunctions implements UIComponentChecks{
 	 * @param logfileLocation
 	 */
 	public UploadTester(String site, String viewPath, String welcomePath,
-			String username, String password) {
-		super(site, viewPath, welcomePath, username, password);
+			String username, String password, boolean loginRequired) {
+		super(site, viewPath, welcomePath, username, password, loginRequired);
 
 		// TODO More code may be required here in the future
 	}
@@ -82,28 +82,6 @@ public class UploadTester extends BaseFunctions implements UIComponentChecks{
 		}
 		
 		// Test uploading to an existing folder
-	}
-	
-	@Override
-	public void validateButtons() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * Non-applicable on this portlet only
-	 */
-	@Override
-	public void validateRecordList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void selectSingleECG() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
