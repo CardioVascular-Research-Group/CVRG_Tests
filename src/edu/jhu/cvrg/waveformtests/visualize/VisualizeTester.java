@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
@@ -38,6 +39,10 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 		currentPage = DisplayPanelEnum.INITIAL;
 		testProps = WaveformTestProperties.getInstance();
 		
+	}
+	
+	public VisualizeTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
 	}
 	
 	public void testVisualizeViews() {

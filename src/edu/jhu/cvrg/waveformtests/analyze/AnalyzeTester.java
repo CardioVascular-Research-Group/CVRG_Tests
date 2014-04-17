@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,6 +24,10 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public AnalyzeTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
 	}
 	
 	public void analyzeOneECG() throws IOException {

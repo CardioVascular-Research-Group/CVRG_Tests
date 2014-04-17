@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
@@ -16,6 +17,10 @@ public final class CEPSearchTester extends GenericCEPTester {
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public CEPSearchTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
 	}
 	
 	@Override
@@ -32,7 +37,6 @@ public final class CEPSearchTester extends GenericCEPTester {
 			portletLogMessages.add("*********************");
 			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
 			
-			this.resetPage(inputBoxID);
 			
 			switch(testCase) {
 				case BLANK:
@@ -81,6 +85,11 @@ public final class CEPSearchTester extends GenericCEPTester {
 					break;
 			}
 			portletLogMessages.add("*********************");
+			
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			this.resetPage(inputBoxID);
 		}
 		
 		logger.addToLog(portletLogMessages, TestNameEnum.CEPSEARCH);
@@ -88,17 +97,17 @@ public final class CEPSearchTester extends GenericCEPTester {
 	}
 
 	@Override
-	protected void resetPage(String firstStepInputBoxID) throws CEPException {
+	protected void resetPage(String firstStepInputBoxID) {
 		
 		// Since the back buttons on each page go directly to the starting page, there is no need to iterate through the back buttons
 			
 			// check to see if it is on the search results page
-			if(portletDriver.findElements(By.id("A0660:myform1:step2back2")).isEmpty()) {
+			if(!(portletDriver.findElements(By.id("A0660:myform1:step2back2")).isEmpty())) {
 				portletLogMessages.add("Currently on search results page, clicking back button");
 				portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
 			}
 			// next, check to see if it is on the download page
-			else if(portletDriver.findElements(By.id("A0660:finalcomplete:startover")).isEmpty()) {
+			else if(!(portletDriver.findElements(By.id("A0660:finalcomplete:startover")).isEmpty())) {
 				portletLogMessages.add("Currently on search results page, clicking back button");
 				portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
 			}	
@@ -108,7 +117,9 @@ public final class CEPSearchTester extends GenericCEPTester {
 			// finally, see if we arrived back at the main page, stop testing if we did not
 			// If the first page can't be found, then later tests
 			if(portletDriver.findElements(By.id(firstStepInputBoxID)).isEmpty()) {
-				throw new CEPException("ERROR:  Unable to return to the original starting page, testing will now end");
+				portletLogMessages.add("ERROR:  Unable to return to the original starting page, one of the back buttons is missing or non-functional.  Doing a refresh of the page");
+				
+				portletDriver.navigate().refresh();
 			}
 	}
 	

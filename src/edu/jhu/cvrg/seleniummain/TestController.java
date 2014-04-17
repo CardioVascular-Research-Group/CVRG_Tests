@@ -127,6 +127,7 @@ public class TestController {
 			
 			testProps.loadConfiguration(propertiesFileLocation);
 			
+			LogfileManager logger = LogfileManager.getInstance();
 			logger.addToLog("Waveform 3 Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
 		
 			String uploadPath = testProps.getUploadPath();
@@ -175,8 +176,9 @@ public class TestController {
 			setup();
 		
 			testProps.loadConfiguration(propertiesFileLocation);
+			LogfileManager logger = LogfileManager.getInstance();
 			
-			logger.addToLog("Waveform 3 Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
+			logger.addToLog("CEP Tools Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
 			
 			String uploadpath = testProps.getUploadpath();
 			String searchpath = testProps.getSearchpath();
@@ -184,6 +186,7 @@ public class TestController {
 			CEPUploadTester upload = new CEPUploadTester(hostname, uploadpath, initialWelcomePath, username, password, true);
 			
 			upload.login(false);
+			upload.goToPage();
 
 			upload.runAllTests();
 			upload.logout();
@@ -192,6 +195,7 @@ public class TestController {
 			CEPSearchTester search = new CEPSearchTester(hostname, searchpath, initialWelcomePath, username, password, true);
 
 			search.login(false);
+			search.goToPage();
 
 			search.runAllTests();
 			search.logout();

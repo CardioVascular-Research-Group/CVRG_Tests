@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
@@ -17,17 +18,28 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected CEPTestProperties cepProps;
 
-	public GenericCEPTester(String site, String viewPath, String welcomePath,
+	protected GenericCEPTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		
 		cepProps = CEPTestProperties.getInstance();
 	}
 	
+	protected GenericCEPTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+	}
+	
 	// This overridden version uses the GlobusLogin class for testing (no need to reinvent the wheel)
 	@Override
 	public final void login(boolean newWindowNeeded) {
-		GlobusLogin gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, this.loginNeeded);
+		GlobusLogin gLogin;
+		
+		if(newWindowNeeded) {
+			gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, newWindowNeeded);
+		}
+		else {
+			gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, this.portletDriver);
+		}
 		
 		// test if login through Globus works.
 		// Note:  Technically speaking the Globus doesn't doesn't explicitly require Globus so this can work with
@@ -55,6 +67,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		
 		portletDriver.findElement(By.id(inputBoxID)).clear();
 		portletDriver.findElement(By.id(nextButtonID)).click();
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		if(!(portletDriver.findElements(By.xpath("//div[@class='portlet-msg-error']")).isEmpty())) {
 			portletLogMessages.add("An empty string was entered into the search field.\n  A message asking to enter data a value in the search field has successfully been given");
@@ -160,14 +173,8 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		
 		if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
 			portletLogMessages.add("The datatable on the second step exists");
+			success = true;
 			
-			if(!(portletDriver.findElements(By.xpath("//button"))).isEmpty() && (portletDriver.findElements(By.xpath("//button"))).size() == 2 ) {
-				portletLogMessages.add("The Back and Next buttons exist");
-				success = true;
-			}
-			else {
-				portletLogMessages.add("Either one or both buttons are missing, or there are more than two on the page");
-			}
 		}
 		else {
 			portletLogMessages.add("The datatable is missing from the page");
@@ -181,40 +188,45 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		
 		// first, if there are no results or nothing has been highlighted, check the next button and make sure it does not proceed to the next page
 		try {
-		portletDriver.findElement(By.id(step2NextButtonID)).click();
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			portletDriver.findElement(By.id(step2NextButtonID)).click();
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			
-		if(!(portletDriver.findElements(By.xpath("//span[text='Please choose a single citation from the listing']")).isEmpty())) {
-			portletLogMessages.add("There were no search results, and clicking Next produced the correct message");
-			success = true;
-		}
-		else {
-			if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
-				portletLogMessages.add("ERROR:  There were no search results, but clicking Next allowed the page to proceed anyway");
+			// unfortunately it appears that the inline style is the only thing these error messages have in common across the portlets
+			if(!(portletDriver.findElements(By.xpath("//span[@style='color:red']")).isEmpty())) { 
+				portletLogMessages.add("There were no search results, and clicking Next produced the correct message");
 			}
 			else {
-				// select an entry and then try again, it should proceed this time
-				portletDriver.findElement(By.xpath("//tr[@data-rk='1']")).click();
+				portletLogMessages.add("ERROR:  There were no search results selected, but clicking Next did not produce a message");
+			}
+			
+			// select an entry and then try again, it should proceed this time				
+			if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
+				portletLogMessages.add("No search results were present, and clicking Next did not allow the page to proceed");
+				success = true;
+			}
+			else {
+				portletDriver.findElement(By.xpath("//tr[@data-rk='1']/td")).click();
+				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+				portletDriver.findElement(By.id(step2NextButtonID)).click();
 				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 				
-				if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
-					portletLogMessages.add("ERROR:  Search results were selected, but clicking Next did not allow the page to proceed");
+				if(!(portletDriver.findElements(By.xpath("//span[@style='color:red']")).isEmpty())) { 
+					portletLogMessages.add("ERROR:  There were search results selected, but clicking Next still produced a message");
 				}
 				else {
 					portletLogMessages.add("Search results were selected, and clicking Next did allow the page to proceed");
 					success = true;
 				}
-			}
-			
-		}
+			}			
 		} catch(NoSuchElementException ne) {
 			seleniumLogMessages.add("Selenium was unable to find an element, here is the full stack trace:\n" + LogfileManager.extractStackTrace(ne));
+			success = false;
 		}
 		
 		return success;
 	}
 	
-	protected abstract void resetPage(String firstStepInputBoxID) throws CEPException;
+	protected abstract void resetPage(String firstStepInputBoxID);
 	
 	
 

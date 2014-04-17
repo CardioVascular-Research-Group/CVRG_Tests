@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
@@ -15,6 +16,9 @@ public class GlobusLogin extends BaseFunctions {
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
+	}
+	public GlobusLogin(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 	}
 	
 	public GlobusLogin(String site, String welcomePath,
@@ -30,7 +34,7 @@ public class GlobusLogin extends BaseFunctions {
 		
 		boolean loginSuccess = this.checkInitialSuccess();
 		
-		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		if(loginSuccess) {
 			portletLogMessages.add("Username and password accepted, proceeding to next screen");

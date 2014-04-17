@@ -36,13 +36,13 @@ public abstract class BaseFunctions {
 	protected LogfileManager logger = LogfileManager.getInstance();
 	protected boolean loginNeeded;
 	
-	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired) {
+	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean newWindowRequired) {
 		host = site;
 		portletPage = viewPath;
 		welcomeScreen = welcomePath;
 		username = userName;
 		password = passWord;
-		loginNeeded = loginRequired;
+		loginNeeded = newWindowRequired;
 		
 		portletLogMessages = new ArrayList<String>();
 		seleniumLogMessages = new ArrayList<String>();
@@ -50,12 +50,21 @@ public abstract class BaseFunctions {
 		// TODO:  For now firefox will be used.  Once browser support has been figured out for other browsers
 		// (specifically third party ones for Chrome and Safari), this will be changed to a switch statement
 		// to select a web driver (based on the enumeration value)
-		portletDriver = new FirefoxDriver();
+		if(newWindowRequired) {
+			portletDriver = new FirefoxDriver();
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		}
 		
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);		
+		
 		
 	}
 	
+	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		this(site, viewPath, welcomePath, userName, passWord, false);
+		
+		portletDriver = existingDriver;
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	}
 	// To prevent access to the default constructor
 	private BaseFunctions() {
 		
@@ -70,7 +79,7 @@ public abstract class BaseFunctions {
 		
 		portletDriver.manage().window().maximize();
 		
-		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);	
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);	
 		
 		portletDriver.findElement(By.id("sign-in")).click();
 		
@@ -89,11 +98,11 @@ public abstract class BaseFunctions {
 		
 		portletLogMessages.add("Logging in with username " + username);
 		
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
 		portletDriver.findElement(By.xpath("//input[@value='Sign In']")).click();
 		
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
 	}
 	
@@ -110,9 +119,9 @@ public abstract class BaseFunctions {
 	}
 	
 	public void goToPage() {
-		portletDriver.get(host + portletPage);
+		portletDriver.get(host + "/" + portletPage);
 		
-		portletDriver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
 	
 	public void setURL(String newSite) {
@@ -170,6 +179,10 @@ public abstract class BaseFunctions {
 	
 	public void setPassword (String newPassword) {
 		password = newPassword;
+	}
+	
+	public WebDriver getDriver() {
+		return portletDriver;
 	}
 
 

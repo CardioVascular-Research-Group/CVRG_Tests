@@ -5,6 +5,7 @@ import java.util.ArrayDeque;  // Used to implement a stack (It is in most ways p
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
@@ -20,6 +21,10 @@ public final class CEPUploadTester extends GenericCEPTester {
 		// TODO Auto-generated constructor stub
 		backButtonStack = new ArrayDeque<String>();
 	}
+	
+	public CEPUploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+	}
 
 	@Override
 	public void runAllTests() throws CEPException, IOException {
@@ -28,14 +33,12 @@ public final class CEPUploadTester extends GenericCEPTester {
 		String step1NextButtonID = "A2724:j_idt7:step3next";
 		String step2NextButtonID = "A2724:soak:step4nexttop";
 		
-		portletLogMessages.add("Beginning CEP Search Portlet Tests");
+		portletLogMessages.add("Beginning CEP Upload Portlet Tests");
 		
 		// first, run different test case methods for each type of case
 		for(TestScenarioEnum testCase : TestScenarioEnum.values()) {
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			portletLogMessages.add("*********************");
-			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
-			
-			this.resetPage(inputBoxID);
 			
 			switch(testCase) {
 				case BLANK:
@@ -84,6 +87,10 @@ public final class CEPUploadTester extends GenericCEPTester {
 					break;
 			}
 			portletLogMessages.add("*********************");
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			this.resetPage(inputBoxID);
 		}
 		
 		logger.addToLog(portletLogMessages, TestNameEnum.CEPUPLOAD);
@@ -99,7 +106,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 		boolean success = super.checkStep1Success(inputBoxID, step1NextID, inputValue);
 		System.out.println("In Upload portlet, overriden version of checkStep1Success is called");
 		
-		if(success) {
+		if(!(portletDriver.findElements(By.id("A2724:soak:j_idt19"))).isEmpty()) {
 			backButtonStack.push("A2724:soak:j_idt19");
 		}
 		
@@ -114,7 +121,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 		boolean success = super.checkStep2Success(step2NextButtonID);
 		System.out.println("In Upload portlet, overriden version of checkStep2Success is called");
 		
-		if(success) {
+		if(!(portletDriver.findElements(By.id("A2724:bee:j_idt75"))).isEmpty()) {
 			backButtonStack.push("A2724:bee:j_idt75");
 		}
 		
@@ -123,14 +130,19 @@ public final class CEPUploadTester extends GenericCEPTester {
 
 	// This only tests up to the first three steps until a way around upload is found
 	@Override
-	protected void resetPage(String firstStepInputBoxID) throws CEPException {
+	protected void resetPage(String firstStepInputBoxID) {
 		int i = backButtonStack.size();
 		
 		while(i >= 1) {
+			
+			System.out.println("size = " + i);
+			
 			String backButtonID = backButtonStack.pop();
 			
+			System.out.println("Back Button ID = " + backButtonID);
+			
 			// check to see if it is on the current page
-			if(portletDriver.findElements(By.id(backButtonID)).isEmpty()) {
+			if(!(portletDriver.findElements(By.id(backButtonID)).isEmpty())) {
 				portletLogMessages.add("Currently on search results page, clicking back button");
 				portletDriver.findElement(By.id(backButtonID)).click();
 				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -144,7 +156,9 @@ public final class CEPUploadTester extends GenericCEPTester {
 		// finally, see if we arrived back at the main page, stop testing if we did not
 		// If the first page can't be found, then later tests
 		if(portletDriver.findElements(By.id(firstStepInputBoxID)).isEmpty()) {
-			throw new CEPException("ERROR:  Unable to return to the original starting page, testing will now end");
+			portletLogMessages.add("ERROR:  Unable to return to the original starting page, one of the back buttons is missing or non-functional.  Doing a refresh of the page");
+			
+			portletDriver.navigate().refresh();
 		}
 
 	}

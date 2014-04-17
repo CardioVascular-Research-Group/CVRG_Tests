@@ -1,5 +1,7 @@
 package edu.jhu.cvrg.waveformtests.download;
 
+import org.openqa.selenium.WebDriver;
+
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
@@ -10,6 +12,10 @@ public class DownloadTester extends BaseFunctions implements UIComponentChecks{
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
 		
+	}
+	
+	public DownloadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
 	}
 
 	@Override

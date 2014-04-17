@@ -37,6 +37,10 @@ public class UploadTester extends BaseFunctions {
 		// TODO More code may be required here in the future
 	}
 	
+	public UploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
+		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+	}
+	
 	public void uploadFile() throws IOException {
 		String newFolderBox = "A0684:formUpload:txtFoldername";
 		String addFolder = "A0684:formUpload:btnAdd";
