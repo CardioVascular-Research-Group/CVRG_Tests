@@ -1,8 +1,10 @@
 package edu.jhu.cvrg.ceptests;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
@@ -45,7 +47,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		}
 	}
 	
-	public abstract void runAllTests() throws CEPException;
+	public abstract void runAllTests() throws CEPException, IOException;
 	
 	protected void emptySearch(String inputBoxID, String nextButtonID) {
 		portletLogMessages.add("Entering nothing in the search, expecting a message:");
@@ -84,7 +86,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByPubmedID(String inputBoxID, String step1NextID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "";
+		String inputValue = "23442855";
 		
 		portletLogMessages.add("Searching by Pubmed ID, Pubmed ID used is " + inputValue);
 		
@@ -93,19 +95,49 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByFullname(String inputBoxID, String step1NextID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "";
+		String inputValue = "Moyer, Daniel";
 		
 		portletLogMessages.add("Searching by full name, full name used is " + inputValue);
 		
 		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
 	}
 	
+	protected void gibberishSearch(String inputBoxID, String step1NextID) {
+		String inputValue = "djadsalkdjajda";
+		
+		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
+		
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+	}
+	
+	protected void searchByFirstInitial(String inputBoxID, String step1NextID) {
+		String inputValue = "Moyer, D";
+		
+		portletLogMessages.add("Putting in a Last name and first initial, value is " + inputValue);
+		
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+	}
+	
+	protected void searchByTitle(String inputBoxID, String step1NextID) {
+		String inputValue = "Stress fractures of the pelvis and legs in athletes: a review. ";
+		
+		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
+		
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+	}
+	
 	// This will carry out both step 1 and 2, which are very similar in both upload and search
-	private void conductCommonTests(String inputBoxID, String step1NextID, String inputValue) {
+	protected void conductCommonTests(String inputBoxID, String step1NextID, String inputValue) {
 		step1Success = checkStep1Success(inputBoxID, step1NextID, inputValue);
 		
 		if(step1Success) {
 			portletLogMessages.add("Step 1 has been completed");
+			
+			// check to see if the data table reports that no search results were found
+			if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
+				portletLogMessages.add("No search results were found");
+			}
+			
 			step2Success = checkStep2Success();
 		}
 		else {
@@ -114,18 +146,72 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		}
 	}
 	
-	private boolean checkStep1Success(String inputBoxID, String step1NextID, String inputValue) {
+	protected boolean checkStep1Success(String inputBoxID, String step1NextID, String inputValue) {
+		// The main goal is to check for the existence of the datatable and the back and next buttons on the next page.  If there is a better way to test this then
+		// this can be replaced with that check instead.
+		portletDriver.findElement(By.id(inputBoxID)).clear();
+		portletDriver.findElement(By.id(inputBoxID)).sendKeys(inputValue);
+		portletDriver.findElement(By.id(step1NextID)).click();
 		
+		portletDriver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		
-		return false;
+		boolean success = false;
+		
+		if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
+			portletLogMessages.add("The datatable on the second step exists");
+			
+			if(!(portletDriver.findElements(By.xpath("//button"))).isEmpty() && (portletDriver.findElements(By.xpath("//button"))).size() == 2 ) {
+				portletLogMessages.add("The Back and Next buttons exist");
+				success = true;
+			}
+			else {
+				portletLogMessages.add("Either one or both buttons are missing, or there are more than two on the page");
+			}
+		}
+		else {
+			portletLogMessages.add("The datatable is missing from the page");
+		}
+		
+		return success;
 	}
 	
-	// The base version only selects the row itself.  An overridden version will complete this step
-	protected void selectDatatableEntry() {
+	protected boolean checkStep2Success() {
+		boolean success = false;
 		
+		// first, if there are no results or nothing has been highlighted, check the next button and make sure it does not proceed to the next page
+		try {
+		portletDriver.findElement(By.id("A0660:myform1:step2next2")).click();
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+		if(!(portletDriver.findElements(By.xpath("//span[text='Please choose a single citation from the listing']")).isEmpty())) {
+			portletLogMessages.add("There were no search results, and clicking Next produced the correct message");
+			success = true;
+		}
+		else {
+			if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
+				portletLogMessages.add("ERROR:  There were no search results, but clicking Next allowed the page to proceed anyway");
+			}
+			else {
+				// select an entry and then try again, it should proceed this time
+				portletDriver.findElement(By.xpath("//tr[@data-rk='1']")).click();
+				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+				
+				if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
+					portletLogMessages.add("ERROR:  Search results were selected, but clicking Next did not allow the page to proceed");
+				}
+				else {
+					portletLogMessages.add("Search results were selected, and clicking Next did allow the page to proceed");
+					success = true;
+				}
+			}
+			
+		}
+		} catch(NoSuchElementException ne) {
+			seleniumLogMessages.add("Selenium was unable to find an element, here is the full stack trace:\n" + LogfileManager.extractStackTrace(ne));
+		}
+		
+		return success;
 	}
-	
-	protected abstract boolean checkStep2Success();
 	
 	protected abstract void resetPage(String firstStepInputBoxID) throws CEPException;
 	

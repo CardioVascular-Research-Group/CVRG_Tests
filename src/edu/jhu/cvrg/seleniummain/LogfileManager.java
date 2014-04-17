@@ -80,6 +80,7 @@ public class LogfileManager {
 				logWriter.write("\n** Results from Globus Authenticator **\n");
 				break;
 			case CEPSEARCH:
+				logWriter.write("\n** Results from CEP Tools Search Portlet **\n");
 				break;
 			case CEPUPLOAD:
 				break;
@@ -88,7 +89,7 @@ public class LogfileManager {
 		}
 		
 		for(String logMessage : logMessages) {
-			logWriter.write("\n" + logMessage + "\n");
+			logWriter.write("\n - " + logMessage);
 		}
 		
 		logWriter.write("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
