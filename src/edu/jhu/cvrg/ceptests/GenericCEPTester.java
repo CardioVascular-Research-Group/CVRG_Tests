@@ -25,6 +25,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	// This overridden version uses the GlobusLogin class for testing (no need to reinvent the wheel)
+	@Override
 	public final void login(boolean newWindowNeeded) {
 		GlobusLogin gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, this.loginNeeded);
 		
@@ -64,71 +65,71 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	// The search methods will be completed up to the point where the checkStep2Success method is called.  An overridden version
-	// will complete the rest according the individual needs of each portlet
+	// can be added according the individual needs of each portlet
 	
-	protected void searchByFirstname(String inputBoxID, String step1NextID) {
+	protected void searchByFirstname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
 		String inputValue = "wolfgang";
 		
 		portletLogMessages.add("Searching by first name, first name used is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void searchByLastname(String inputBoxID, String step1NextID) {
+	protected void searchByLastname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
 		String inputValue = "benitez";
 		
 		portletLogMessages.add("Searching by last name, last name used is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void searchByPubmedID(String inputBoxID, String step1NextID) {
+	protected void searchByPubmedID(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
 		String inputValue = "23442855";
 		
 		portletLogMessages.add("Searching by Pubmed ID, Pubmed ID used is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void searchByFullname(String inputBoxID, String step1NextID) {
+	protected void searchByFullname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
 		String inputValue = "Moyer, Daniel";
 		
 		portletLogMessages.add("Searching by full name, full name used is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void gibberishSearch(String inputBoxID, String step1NextID) {
+	protected void gibberishSearch(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		String inputValue = "djadsalkdjajda";
 		
 		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void searchByFirstInitial(String inputBoxID, String step1NextID) {
+	protected void searchByFirstInitial(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		String inputValue = "Moyer, D";
 		
 		portletLogMessages.add("Putting in a Last name and first initial, value is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
-	protected void searchByTitle(String inputBoxID, String step1NextID) {
+	protected void searchByTitle(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		String inputValue = "Stress fractures of the pelvis and legs in athletes: a review. ";
 		
 		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
 		
-		this.conductCommonTests(inputBoxID, step1NextID, inputValue);
+		this.conductCommonTests(inputBoxID, step1NextID, inputValue, step2NextButtonID);
 	}
 	
 	// This will carry out both step 1 and 2, which are very similar in both upload and search
-	protected void conductCommonTests(String inputBoxID, String step1NextID, String inputValue) {
-		step1Success = checkStep1Success(inputBoxID, step1NextID, inputValue);
+	protected void conductCommonTests(String inputBoxID, String step1NextID, String inputValue, String step2NextButtonID) {
+		step1Success = this.checkStep1Success(inputBoxID, step1NextID, inputValue);
 		
 		if(step1Success) {
 			portletLogMessages.add("Step 1 has been completed");
@@ -138,7 +139,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 				portletLogMessages.add("No search results were found");
 			}
 			
-			step2Success = checkStep2Success();
+			step2Success = this.checkStep2Success(step2NextButtonID);
 		}
 		else {
 			portletLogMessages.add("ERROR:  Unable to reach data results page");
@@ -175,12 +176,12 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		return success;
 	}
 	
-	protected boolean checkStep2Success() {
+	protected boolean checkStep2Success(String step2NextButtonID) {
 		boolean success = false;
 		
 		// first, if there are no results or nothing has been highlighted, check the next button and make sure it does not proceed to the next page
 		try {
-		portletDriver.findElement(By.id("A0660:myform1:step2next2")).click();
+		portletDriver.findElement(By.id(step2NextButtonID)).click();
 		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			
 		if(!(portletDriver.findElements(By.xpath("//span[text='Please choose a single citation from the listing']")).isEmpty())) {

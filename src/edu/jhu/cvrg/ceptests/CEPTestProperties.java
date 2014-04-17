@@ -13,6 +13,9 @@ public class CEPTestProperties {
 	private String pubmedid;
 	private String fullname;
 	
+	private String uploadpath;
+	private String searchpath;
+	
 	private CEPTestProperties() {
 	       
 	}
@@ -40,6 +43,9 @@ public class CEPTestProperties {
 			pubmedid = props.getProperty("existingpubmedid", "confignotfound");
 			fullname = props.getProperty("fullname", "confignotfound");	
 			
+			uploadpath = props.getProperty("uploadpath", "confignotfound");
+			searchpath = props.getProperty("searchpath", "confignotfound");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,5 +65,13 @@ public class CEPTestProperties {
 	
 	public String getFullname() {
 		return fullname;
+	}
+	
+	public String getUploadpath() {
+		return uploadpath;
+	}
+	
+	public String getSearchpath() {
+		return searchpath;
 	}
 }

@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import edu.jhu.cvrg.authenticationtests.GlobusLogin;
+import edu.jhu.cvrg.ceptests.CEPException;
+import edu.jhu.cvrg.ceptests.CEPTestProperties;
+import edu.jhu.cvrg.ceptests.search.CEPSearchTester;
+import edu.jhu.cvrg.ceptests.upload.CEPUploadTester;
 import edu.jhu.cvrg.waveformtests.WaveformTestProperties;
 import edu.jhu.cvrg.waveformtests.analyze.AnalyzeTester;
 import edu.jhu.cvrg.waveformtests.upload.UploadTester;
@@ -57,6 +61,7 @@ public class TestController {
 			case "WAVEFORM":
 				break;
 			case "CEP":
+				mainControl.testCEPTools(cepPropsLocation);
 				break;
 			case "ALL":
 				break;
@@ -159,6 +164,43 @@ public class TestController {
 			System.exit(1);
 		}
 		
+	}
+	
+	public void testCEPTools(String propertiesFileLocation) {
+		
+		
+		CEPTestProperties testProps = CEPTestProperties.getInstance();
+		
+		try {
+			setup();
+		
+			testProps.loadConfiguration(propertiesFileLocation);
+			
+			logger.addToLog("Waveform 3 Selenium Test Begin:  " + dateFormat.format(todaysDate.getTime()));
+			
+			String uploadpath = testProps.getUploadpath();
+			String searchpath = testProps.getSearchpath();
+			
+			CEPUploadTester upload = new CEPUploadTester(hostname, uploadpath, initialWelcomePath, username, password, true);
+			
+			upload.login(false);
+
+			upload.runAllTests();
+			upload.logout();
+			upload.close();
+			
+			CEPSearchTester search = new CEPSearchTester(hostname, searchpath, initialWelcomePath, username, password, true);
+
+			search.login(false);
+
+			search.runAllTests();
+			search.logout();
+			search.close();
+		} catch (CEPException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	public void setUsername(String newUser) {

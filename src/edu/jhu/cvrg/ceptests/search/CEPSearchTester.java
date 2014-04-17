@@ -1,6 +1,7 @@
 package edu.jhu.cvrg.ceptests.search;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 
@@ -9,9 +10,9 @@ import edu.jhu.cvrg.ceptests.GenericCEPTester;
 import edu.jhu.cvrg.ceptests.TestScenarioEnum;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
-public final class SearchTester extends GenericCEPTester {
+public final class CEPSearchTester extends GenericCEPTester {
 
-	public SearchTester(String site, String viewPath, String welcomePath,
+	public CEPSearchTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
 		// TODO Auto-generated constructor stub
@@ -22,6 +23,7 @@ public final class SearchTester extends GenericCEPTester {
 		
 		String inputBoxID = "A0660:step1start:se";
 		String step1NextButtonID = "A0660:step1start:step1next";
+		String step2NextButtonID = "A0660:myform1:step2next2";
 		
 		portletLogMessages.add("Beginning CEP Search Portlet Tests");
 		
@@ -37,40 +39,43 @@ public final class SearchTester extends GenericCEPTester {
 					this.emptySearch(inputBoxID, step1NextButtonID);
 					break;
 				case FIRSTNAME:
-					this.searchByFirstname(inputBoxID, step1NextButtonID);
+					this.searchByFirstname(inputBoxID, step1NextButtonID, step2NextButtonID);
 					if(step2Success) {
 						this.testLastStep();
 					}
 					break;
 				case FULLNAME:
-					this.searchByFullname(inputBoxID, step1NextButtonID);
+					this.searchByFullname(inputBoxID, step1NextButtonID, step2NextButtonID);
 					if(step2Success) {
 						this.testLastStep();
 					}
 					break;
 				case LASTNAME:
-					this.searchByLastname(inputBoxID, step1NextButtonID);
+					this.searchByLastname(inputBoxID, step1NextButtonID, step2NextButtonID);
 					if(step2Success) {
 						this.testLastStep();
 					}
 					break;
 				case PUBMEDID:
-					this.searchByPubmedID(inputBoxID, step1NextButtonID);
+					this.searchByPubmedID(inputBoxID, step1NextButtonID, step2NextButtonID);
 					if(step2Success) {
 						this.testLastStep();
 					}
 					break;
 				case GIBBERISH:
-					this.gibberishSearch(inputBoxID, step1NextButtonID);
+					this.gibberishSearch(inputBoxID, step1NextButtonID, step2NextButtonID);
 					break;
 				case FIRSTINITIAL:
-					this.searchByFirstInitial(inputBoxID, step1NextButtonID);
+					this.searchByFirstInitial(inputBoxID, step1NextButtonID, step2NextButtonID);
 					if(step2Success) {
 						this.testLastStep();
 					}
 					break;
 				case TITLE:
-					this.searchByTitle(inputBoxID, step1NextButtonID);
+					this.searchByTitle(inputBoxID, step1NextButtonID, step2NextButtonID);
+					if(step2Success) {
+						this.testLastStep();
+					}
 					break;
 				default:
 					break;
@@ -97,6 +102,8 @@ public final class SearchTester extends GenericCEPTester {
 				portletLogMessages.add("Currently on search results page, clicking back button");
 				portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
 			}	
+			
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			
 			// finally, see if we arrived back at the main page, stop testing if we did not
 			// If the first page can't be found, then later tests
