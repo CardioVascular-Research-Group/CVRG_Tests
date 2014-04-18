@@ -163,13 +163,16 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	protected boolean checkStep1Success(String inputBoxID, String step1NextID, String inputValue) {
 		// The main goal is to check for the existence of the datatable and the back and next buttons on the next page.  If there is a better way to test this then
 		// this can be replaced with that check instead.
+		boolean success = false;
+		
+		try {
 		portletDriver.findElement(By.id(inputBoxID)).clear();
 		portletDriver.findElement(By.id(inputBoxID)).sendKeys(inputValue);
 		portletDriver.findElement(By.id(step1NextID)).click();
 		
 		portletDriver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		
-		boolean success = false;
+
 		
 		if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
 			portletLogMessages.add("The datatable on the second step exists");
@@ -178,6 +181,9 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		}
 		else {
 			portletLogMessages.add("The datatable is missing from the page");
+		}
+		} catch (NoSuchElementException ne) {
+			seleniumLogMessages.add("ERROR:  An element was not found when checking the search results page.  This is the stack trace:\n" + LogfileManager.extractStackTrace(ne));
 		}
 		
 		return success;
