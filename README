@@ -39,3 +39,5 @@ running in debug mode as well.  To change the command line arguments simply retu
 above.
 
 Note:  If the logfile location is in the same place as an existing logfile, it will attempt to append to that logfile rather than override and create a new one.
+
+In addition, on Windows, use a word processor or text editor other than Notepad for best results
