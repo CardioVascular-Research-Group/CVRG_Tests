@@ -72,7 +72,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 			portletDriver.findElement(By.id(nextButtonID)).click();
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			
-			if(!(portletDriver.findElements(By.xpath("//div[@class='portlet-msg-error']")).isEmpty())) {
+			if(!(portletDriver.findElements(By.xpath("//li[@class='portlet-msg-error']")).isEmpty())) {
 				portletLogMessages.add("An empty string was entered into the search field.\n  A message asking to enter data a value in the search field has successfully been given");
 			}
 			else {
@@ -88,7 +88,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByFirstname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "wolfgang";
+		String inputValue = cepProps.getFirstname();
 		
 		portletLogMessages.add("Searching by first name, first name used is " + inputValue);
 		
@@ -97,7 +97,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByLastname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "benitez";
+		String inputValue = cepProps.getLastname();
 		
 		portletLogMessages.add("Searching by last name, last name used is " + inputValue);
 		
@@ -106,7 +106,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByPubmedID(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "23442855";
+		String inputValue = cepProps.getPubmedID();
 		
 		portletLogMessages.add("Searching by Pubmed ID, Pubmed ID used is " + inputValue);
 		
@@ -115,7 +115,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected void searchByFullname(String inputBoxID, String step1NextID, String step2NextButtonID) {
 		// TODO:  Utilize the CEPTestProperties class for this
-		String inputValue = "Moyer, Daniel";
+		String inputValue = cepProps.getFullname();
 		
 		portletLogMessages.add("Searching by full name, full name used is " + inputValue);
 		
@@ -123,7 +123,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	protected void gibberishSearch(String inputBoxID, String step1NextID, String step2NextButtonID) {
-		String inputValue = "djadsalkdjajda";
+		String inputValue = cepProps.getGibberish();
 		
 		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
 		
@@ -131,7 +131,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	protected void searchByFirstInitial(String inputBoxID, String step1NextID, String step2NextButtonID) {
-		String inputValue = "Moyer, D";
+		String inputValue = cepProps.getFirstinitial();
 		
 		portletLogMessages.add("Putting in a Last name and first initial, value is " + inputValue);
 		
@@ -139,7 +139,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	protected void searchByTitle(String inputBoxID, String step1NextID, String step2NextButtonID) {
-		String inputValue = "Stress fractures of the pelvis and legs in athletes: a review. ";
+		String inputValue = cepProps.getTitle();
 		
 		portletLogMessages.add("Putting in a junk value, value is " + inputValue);
 		

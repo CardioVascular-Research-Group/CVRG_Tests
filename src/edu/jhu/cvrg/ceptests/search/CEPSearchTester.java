@@ -138,10 +138,14 @@ public final class CEPSearchTester extends GenericCEPTester {
 		success = this.checkStep3Success();
 		
 		if(success) {
-		
+			portletLogMessages.add("Loading the download page has succeeded");
+			
+			
 		// TODO:  In the future, download buttons will be tested, but since these are being run in a loop and the test needs
 		// to reset the page each time, a way to know when the manual download process has finished must be found.  If such a way is
 		// found, then testing the download buttons should go here.
+			
+			
 
 		}
 		else {
@@ -154,9 +158,10 @@ public final class CEPSearchTester extends GenericCEPTester {
 		
 		// check to see if the form exists at all
 		if(!(portletDriver.findElements(By.id("A0660:finalcomplete")).isEmpty())) {
+			portletLogMessages.add("The form element on the download page has successfully loaded");
 			// now see if the datatable and buttons are present
-			if(!(portletDriver.findElements(By.xpath("//table")).isEmpty()) && !(portletDriver.findElements(By.id("A0660:finalcomplete:ft:0:downloadziponly")).isEmpty()) && !(portletDriver.findElements(By.id("A0660:finalcomplete:startover")).isEmpty())) {
-				portletLogMessages.add("The download page has successfully loaded");
+			if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
+				portletLogMessages.add("The main datatable on the download page has successfully loaded");
 				success = true;
 			}
 			

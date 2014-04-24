@@ -12,6 +12,9 @@ public class CEPTestProperties {
 	private String lastname;
 	private String pubmedid;
 	private String fullname;
+	private String gibberish;
+	private String firstinitial;
+	private String title;
 	
 	private String uploadpath;
 	private String searchpath;
@@ -41,7 +44,10 @@ public class CEPTestProperties {
 			firstname = props.getProperty("firstname", "confignotfound");
 			lastname = props.getProperty("lastname", "confignotfound");
 			pubmedid = props.getProperty("existingpubmedid", "confignotfound");
-			fullname = props.getProperty("fullname", "confignotfound");	
+			fullname = props.getProperty("fullname", "confignotfound");
+			gibberish = props.getProperty("gibberish", "confignotfound");
+			firstinitial = props.getProperty("firstinitial", "confignotfound");
+			title = props.getProperty("title", "confignotfound");
 			
 			uploadpath = props.getProperty("uploadpath", "confignotfound");
 			searchpath = props.getProperty("searchpath", "confignotfound");
@@ -65,6 +71,18 @@ public class CEPTestProperties {
 	
 	public String getFullname() {
 		return fullname;
+	}
+	
+	public String getGibberish() {
+		return gibberish;
+	}
+	
+	public String getFirstinitial() {
+		return firstinitial;
+	}
+	
+	public String getTitle() {
+		return title;
 	}
 	
 	public String getUploadpath() {
