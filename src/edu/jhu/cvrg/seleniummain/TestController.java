@@ -46,27 +46,28 @@ public class TestController {
 		String waveformPropsLocation = "./src/testconfig/waveform_properties.config";
 		String cepPropsLocation = "./src/testconfig/cep_properties.config";
 		
-		System.out.println(commonPropsLocation);
-		System.out.println(waveformPropsLocation);
-		System.out.println(cepPropsLocation);
-		
 		
 		
 		TestController mainControl = new TestController(hostname, logfilePath, username, password);
 		
-		switch(testType) {
-			case "LOGON":
+		TestControlTypeEnum testTypeEnum = TestControlTypeEnum.valueOf(testType);
+		
+		switch(testTypeEnum) {
+			case LOGON:
 				mainControl.testAuthentication(commonPropsLocation);
 				break;
-			case "WAVEFORM":
+			case WAVEFORM:
 				break;
-			case "CEP":
+			case CEP:
 				mainControl.testCEPTools(cepPropsLocation);
 				break;
-			case "ALL":
+			case ALL:
 				break;
 			default:
 				// Exit
+				System.out.println("Invalid test option entered.\n");
+				System.out.println("Usage:  CVRG_Tests.jar <LOGON | WAVEFORM | CEP | ALL> <hostname> <username> <password> <logfile_location>\n");
+				System.exit(0);
 				break;
 		}
 		
@@ -200,7 +201,7 @@ public class TestController {
 			search.runAllTests();
 			search.logout();
 			search.close();
-		} catch (CEPException | IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(1);

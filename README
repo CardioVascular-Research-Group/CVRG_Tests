@@ -5,7 +5,7 @@ now only Firefox is supported.
 
 This can either be compiled as an executable jar or run as a project within eclipse.
 
-First, acquire the Selenium libraries and their dependencies from the CVRG_Tests-dependencies folder in Dropbox.  Copy the WaveformTests-dependencies folder into the projects-dependencies folder in liferay
+First, acquire the Selenium libraries and their dependencies from the CVRG_Tests-dependencies folder in Dropbox.  Copy the CVRG_Tests-dependencies folder into the projects-dependencies folder in liferay
 
 Copy the config files located in that same directory into the src/testconfig folder in the project source code.  Be sure to fill in the login credentials
 for the login accounts in the global_properties.config file before building the jar.
@@ -16,7 +16,7 @@ If running as a standalone executable:
 
 2)  At the command line, type:
 
-java -jar WaveformTests.jar <LOGIN | WAVEFORM | CEP> <host> <username> <password> <desired_logfile_location>
+java -jar WaveformTests.jar <LOGIN | WAVEFORM | CEP | ALL> <host> <username> <password> <desired_logfile_location>
 
 Note:  The ant script copies over a default config file into the /opt/liferay/testing folder that is ready to use.
 
@@ -37,3 +37,5 @@ If running from within Eclipse:
 After the initial configuration is set up, all that is required is to run the program through Eclipse.  This also allows for 
 running in debug mode as well.  To change the command line arguments simply return to the Run Configurations screen and follow the steps
 above.
+
+Note:  If the logfile location is in the same place as an existing logfile, it will attempt to append to that logfile rather than override and create a new one.

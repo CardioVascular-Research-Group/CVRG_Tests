@@ -109,7 +109,6 @@ public final class CEPUploadTester extends GenericCEPTester {
 		// The main goal is to check for the existence of the datatable and the back and next buttons on the next page.  If there is a better way to test this then
 		// this can be replaced with that check instead.
 		boolean success = super.checkStep1Success(inputBoxID, step1NextID, inputValue);
-		System.out.println("In Upload portlet, overriden version of checkStep1Success is called");
 		
 		if(!(portletDriver.findElements(By.id("A2724:soak:j_idt19"))).isEmpty()) {
 			backButtonStack.push("A2724:soak:j_idt19");
@@ -124,7 +123,6 @@ public final class CEPUploadTester extends GenericCEPTester {
 		// The main goal is to check for the existence of the datatable and the back and next buttons on the next page.  If there is a better way to test this then
 		// this can be replaced with that check instead.
 		boolean success = super.checkStep2Success(step2NextButtonID);
-		System.out.println("In Upload portlet, overriden version of checkStep2Success is called");
 		
 		if(!(portletDriver.findElements(By.id("A2724:bee:j_idt75"))).isEmpty()) {
 			backButtonStack.push("A2724:bee:j_idt75");
@@ -140,11 +138,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 		
 		while(i >= 1) {
 			
-			System.out.println("size = " + i);
-			
 			String backButtonID = backButtonStack.pop();
-			
-			System.out.println("Back Button ID = " + backButtonID);
 			
 			// check to see if it is on the current page
 			if(!(portletDriver.findElements(By.id(backButtonID)).isEmpty())) {
