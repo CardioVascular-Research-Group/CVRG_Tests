@@ -26,7 +26,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	protected GenericCEPTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
-		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 	}
 	
 	// This overridden version uses the GlobusLogin class for testing (no need to reinvent the wheel)
