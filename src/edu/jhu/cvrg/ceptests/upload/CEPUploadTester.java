@@ -5,11 +5,13 @@ import java.util.ArrayDeque;  // Used to implement a stack (It is in most ways p
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
 import edu.jhu.cvrg.ceptests.TestScenarioEnum;
+import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
 public final class CEPUploadTester extends GenericCEPTester {
@@ -39,6 +41,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 		for(TestScenarioEnum testCase : TestScenarioEnum.values()) {
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			portletLogMessages.add("*********************");
+			portletLogMessages.add("Currently searching by " + testCase);
 			
 			switch(testCase) {
 				case BLANK:
@@ -88,13 +91,15 @@ public final class CEPUploadTester extends GenericCEPTester {
 			}
 			portletLogMessages.add("*********************");
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
+			portletLogMessages.add("Now resetting page");
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			this.resetPage(inputBoxID);
 		}
 		
 		logger.addToLog(portletLogMessages, TestNameEnum.CEPUPLOAD);
-		logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);
+		if(seleniumLogMessages.size() > 0) {
+			logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);
+		}
 
 	}
 	
@@ -143,7 +148,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 			
 			// check to see if it is on the current page
 			if(!(portletDriver.findElements(By.id(backButtonID)).isEmpty())) {
-				portletLogMessages.add("Currently on search results page, clicking back button");
+				portletLogMessages.add("Clicking back button(s) to return to starting screen");
 				portletDriver.findElement(By.id(backButtonID)).click();
 				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			}
@@ -168,6 +173,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 		
 		success = this.checkStep3Success();
 		
+		try {
 		if(success) {
 			portletDriver.findElement(By.id("A2724:bee:j_idt80")).click();
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -191,17 +197,30 @@ public final class CEPUploadTester extends GenericCEPTester {
 		else {
 			portletLogMessages.add("ERROR:  Loading the verify citations page has failed");
 		}
+		} catch (NoSuchElementException ne) {
+			seleniumLogMessages.add("While on the citation confirmation page, a NoSuchElementException was caught, here are the details:  " + LogfileManager.extractStackTrace(ne));
+		}
 	}
 	
 	private boolean checkStep3Success() {
 		boolean success = false;
 		
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		
 		// check to see if the form exists at all
 		if(!(portletDriver.findElements(By.id("A2724:bee")).isEmpty())) {
 			// now see if the citation elements and buttons are present
-			if(!(portletDriver.findElements(By.xpath("//span[text='Is this the correct citation?']")).isEmpty()) && !(portletDriver.findElements(By.id("A2724:bee:j_idt80")).isEmpty()) && !(portletDriver.findElements(By.id("A2724:bee:j_idt75")).isEmpty())) {
-				portletLogMessages.add("The verify citations page has successfully loaded");
-				success = true;
+			if(!(portletDriver.findElements(By.id("A2724:bee:selectedpubconfirmtt")).isEmpty())) {
+				portletLogMessages.add("Field which displays the publication information title appears");
+				
+				if(!(portletDriver.findElements(By.id("A2724:bee:j_idt80")).isEmpty())) {
+					portletLogMessages.add("The Next button appears");
+						if(!(portletDriver.findElements(By.id("A2724:bee:j_idt75")).isEmpty())) {
+							portletLogMessages.add("The Next button appears");
+							portletLogMessages.add("The verify citations page has successfully loaded");
+							success = true;
+						}
+					}
 			}
 			
 		}
@@ -211,6 +230,8 @@ public final class CEPUploadTester extends GenericCEPTester {
 	
 	private boolean checkStep4Success() {
 		boolean success = false;
+		
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		// check to see if the form exists at all
 		if(!(portletDriver.findElements(By.id("A2724:j_idt82")).isEmpty())) {

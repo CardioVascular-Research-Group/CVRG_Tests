@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
 import edu.jhu.cvrg.ceptests.TestScenarioEnum;
+import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
 public final class CEPSearchTester extends GenericCEPTester {
@@ -35,7 +37,7 @@ public final class CEPSearchTester extends GenericCEPTester {
 		// first, run different test case methods for each type of case
 		for(TestScenarioEnum testCase : TestScenarioEnum.values()) {
 			portletLogMessages.add("*********************");
-			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
+			portletLogMessages.add("Currently searching by " + testCase);
 			
 			
 			switch(testCase) {
@@ -87,39 +89,46 @@ public final class CEPSearchTester extends GenericCEPTester {
 			portletLogMessages.add("*********************");
 			
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-			portletLogMessages.add("Currently searching by " + testCase + ", resetting page");
+			portletLogMessages.add("Test case finished, resetting page");
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			this.resetPage(inputBoxID);
 		}
 		
 		logger.addToLog(portletLogMessages, TestNameEnum.CEPSEARCH);
-		logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);
+		if(seleniumLogMessages.size() > 0) {
+			logger.addToLog(seleniumLogMessages, TestNameEnum.SELENIUM);
+		}
 	}
 
 	@Override
 	protected void resetPage(String firstStepInputBoxID) {
 		
 		// Since the back buttons on each page go directly to the starting page, there is no need to iterate through the back buttons
-			
-			// check to see if it is on the search results page
-			if(!(portletDriver.findElements(By.id("A0660:myform1:step2back2")).isEmpty())) {
-				portletLogMessages.add("Currently on search results page, clicking back button");
-				portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
-			}
-			// next, check to see if it is on the download page
-			else if(!(portletDriver.findElements(By.id("A0660:finalcomplete:startover")).isEmpty())) {
-				portletLogMessages.add("Currently on search results page, clicking back button");
-				portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
-			}	
-			
-			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-			
-			// finally, see if we arrived back at the main page, stop testing if we did not
-			// If the first page can't be found, then later tests
-			if(portletDriver.findElements(By.id(firstStepInputBoxID)).isEmpty()) {
-				portletLogMessages.add("ERROR:  Unable to return to the original starting page, one of the back buttons is missing or non-functional.  Doing a refresh of the page");
+		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			try {
+				// check to see if it is on the search results page
+				if(!(portletDriver.findElements(By.id("A0660:myform1:step2back2")).isEmpty())) {
+					portletLogMessages.add("Currently on search results page, clicking back button");
+					portletDriver.findElement(By.id("A0660:myform1:step2back2")).click();
+				}
+				// next, check to see if it is on the download page
+				else if(!(portletDriver.findElements(By.id("A0660:finalcomplete:startover")).isEmpty())) {
+					portletLogMessages.add("Currently on download page, clicking Start Over button");
+					portletDriver.findElement(By.id("A0660:finalcomplete:startover")).click();
+				}	
+			} catch(NoSuchElementException ne) {
+				seleniumLogMessages.add("ERROR:  A NoSuchElemenetException was caught while resetting the page.  Here are the details:  " + LogfileManager.extractStackTrace(ne));
+			} finally {
 				
-				portletDriver.navigate().refresh();
+				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+				
+				// finally, see if we arrived back at the main page, stop testing if we did not
+				// If the first page can't be found, then later tests
+				if(portletDriver.findElements(By.id(firstStepInputBoxID)).isEmpty()) {
+					portletLogMessages.add("ERROR:  Unable to return to the original starting page, one of the back buttons is missing or non-functional.  Doing a refresh of the page");
+					
+					portletDriver.navigate().refresh();
+				}
 			}
 	}
 	

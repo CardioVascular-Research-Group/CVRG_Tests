@@ -63,17 +63,23 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	public abstract void runAllTests() throws CEPException, IOException;
 	
 	protected void emptySearch(String inputBoxID, String nextButtonID) {
-		portletLogMessages.add("Entering nothing in the search, expecting a message:");
+		portletLogMessages.add("Entering nothing in the search, expecting a message prompting to enter something into the search box:");
 		
-		portletDriver.findElement(By.id(inputBoxID)).clear();
-		portletDriver.findElement(By.id(nextButtonID)).click();
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
-		if(!(portletDriver.findElements(By.xpath("//div[@class='portlet-msg-error']")).isEmpty())) {
-			portletLogMessages.add("An empty string was entered into the search field.\n  A message asking to enter data a value in the search field has successfully been given");
-		}
-		else {
-			portletLogMessages.add("ERROR:  An empty string was entered into the search field, but no error message displayed");
+		try {
+			portletDriver.findElement(By.id(inputBoxID)).clear();
+			portletDriver.findElement(By.id(nextButtonID)).click();
+			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			if(!(portletDriver.findElements(By.xpath("//div[@class='portlet-msg-error']")).isEmpty())) {
+				portletLogMessages.add("An empty string was entered into the search field.\n  A message asking to enter data a value in the search field has successfully been given");
+			}
+			else {
+				portletLogMessages.add("ERROR:  An empty string was entered into the search field, but no error message displayed");
+			}
+		} catch (NoSuchElementException ne) {
+			seleniumLogMessages.add("An element in the input page was unable to be found, here is more information:  " + LogfileManager.extractStackTrace(ne));
 		}
 	}
 	
@@ -166,22 +172,22 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		boolean success = false;
 		
 		try {
-		portletDriver.findElement(By.id(inputBoxID)).clear();
-		portletDriver.findElement(By.id(inputBoxID)).sendKeys(inputValue);
-		portletDriver.findElement(By.id(step1NextID)).click();
-		
-		portletDriver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-		
-
-		
-		if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
-			portletLogMessages.add("The datatable on the second step exists");
-			success = true;
+			portletDriver.findElement(By.id(inputBoxID)).clear();
+			portletDriver.findElement(By.id(inputBoxID)).sendKeys(inputValue);
+			portletDriver.findElement(By.id(step1NextID)).click();
 			
-		}
-		else {
-			portletLogMessages.add("The datatable is missing from the page");
-		}
+			portletDriver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+			
+	
+			
+			if(!(portletDriver.findElements(By.xpath("//table")).isEmpty())) {
+				portletLogMessages.add("The datatable on the second step exists");
+				success = true;
+				
+			}
+			else {
+				portletLogMessages.add("The datatable is missing from the page");
+			}
 		} catch (NoSuchElementException ne) {
 			seleniumLogMessages.add("ERROR:  An element was not found when checking the search results page.  This is the stack trace:\n" + LogfileManager.extractStackTrace(ne));
 		}
@@ -190,7 +196,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	}
 	
 	protected boolean checkStep2Success(String step2NextButtonID) {
-		boolean success = false;
+		boolean success = true;
 		
 		// first, if there are no results or nothing has been highlighted, check the next button and make sure it does not proceed to the next page
 		try {
@@ -203,29 +209,21 @@ public abstract class GenericCEPTester extends BaseFunctions {
 			}
 			else {
 				portletLogMessages.add("ERROR:  There were no search results selected, but clicking Next did not produce a message");
+				success = false;
 			}
 			
 			// select an entry and then try again, it should proceed this time				
 			if(!(portletDriver.findElements(By.xpath("//tr[@class='ui-widget-content ui-datatable-empty-message']")).isEmpty())) {
 				portletLogMessages.add("No search results were present, and clicking Next did not allow the page to proceed");
-				success = true;
 			}
 			else {
 				portletDriver.findElement(By.xpath("//tr[@data-rk='1']/td")).click();
 				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 				portletDriver.findElement(By.id(step2NextButtonID)).click();
 				portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-				
-				if(!(portletDriver.findElements(By.xpath("//span[@style='color:red']")).isEmpty())) { 
-					portletLogMessages.add("ERROR:  There were search results selected, but clicking Next still produced a message");
-				}
-				else {
-					portletLogMessages.add("Search results were selected, and clicking Next did allow the page to proceed");
-					success = true;
-				}
 			}			
 		} catch(NoSuchElementException ne) {
-			seleniumLogMessages.add("Selenium was unable to find an element, here is the full stack trace:\n" + LogfileManager.extractStackTrace(ne));
+			seleniumLogMessages.add("Selenium was unable to find an element in the search results page, here is the full stack trace:\n" + LogfileManager.extractStackTrace(ne));
 			success = false;
 		}
 		
