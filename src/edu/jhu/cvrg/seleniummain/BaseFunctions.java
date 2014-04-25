@@ -11,7 +11,9 @@ package edu.jhu.cvrg.seleniummain;
  *
  * @author bbenite1
  */
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.*;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.*;
 
 import java.io.File;
@@ -35,14 +37,16 @@ public abstract class BaseFunctions {
 	protected WebDriver portletDriver;
 	protected LogfileManager logger = LogfileManager.getInstance();
 	protected boolean loginNeeded;
+	protected BrowserEnum browser;
 	
-	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean newWindowRequired) {
+	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean newWindowRequired, BrowserEnum whichBrowser) {
 		host = site;
 		portletPage = viewPath;
 		welcomeScreen = welcomePath;
 		username = userName;
 		password = passWord;
 		loginNeeded = newWindowRequired;
+		browser = whichBrowser;
 		
 		portletLogMessages = new ArrayList<String>();
 		seleniumLogMessages = new ArrayList<String>();
@@ -51,12 +55,30 @@ public abstract class BaseFunctions {
 		// (specifically third party ones for Chrome and Safari), this will be changed to a switch statement
 		// to select a web driver (based on the enumeration value)
 		if(newWindowRequired) {
-			portletDriver = new FirefoxDriver();
+			switch(browser) {
+			case FIREFOX:
+				portletDriver = new FirefoxDriver();
+				break;
+			case INTERNETEXPLORER:
+				portletDriver = new InternetExplorerDriver();
+				break;
+			case CHROME:
+				portletDriver = new ChromeDriver();
+				break;
+			default:
+				System.out.println("Unrecognized browser option in the global_properties.config file, reverting to Firefox");
+				portletDriver = new FirefoxDriver();
+				break;
+			}
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		}
 		
 		
 		
+	}
+	
+	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean newWindowRequired) {
+		this(site, viewPath, welcomePath, userName, passWord, newWindowRequired, BrowserEnum.FIREFOX);
 	}
 	
 	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {

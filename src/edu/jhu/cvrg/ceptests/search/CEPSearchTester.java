@@ -10,11 +10,18 @@ import org.openqa.selenium.WebDriver;
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
 import edu.jhu.cvrg.ceptests.TestScenarioEnum;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
 public final class CEPSearchTester extends GenericCEPTester {
 
+	public CEPSearchTester(String site, String viewPath, String welcomePath,
+			String userName, String passWord, boolean loginRequired,
+			BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
+	
 	public CEPSearchTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);

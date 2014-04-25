@@ -25,6 +25,8 @@ public class TestController {
 	private String username;
 	private String password;
 	private String initialWelcomePath = "web/guest/home";
+	private CommonProperties commonProps;
+	private BrowserEnum whichBrowser;
 
 	/**
 	 * @param args
@@ -46,7 +48,9 @@ public class TestController {
 		String waveformPropsLocation = "./src/testconfig/waveform_properties.config";
 		String cepPropsLocation = "./src/testconfig/cep_properties.config";
 		
-		
+		// initialize the Singleton instance of the global properties
+		CommonProperties init = CommonProperties.getInstance();
+		init.loadConfiguration(commonPropsLocation);
 		
 		TestController mainControl = new TestController(hostname, logfilePath, username, password);
 		
@@ -54,7 +58,7 @@ public class TestController {
 		
 		switch(testTypeEnum) {
 			case LOGON:
-				mainControl.testAuthentication(commonPropsLocation);
+				mainControl.testAuthentication();
 				break;
 			case WAVEFORM:
 				break;
@@ -62,6 +66,8 @@ public class TestController {
 				mainControl.testCEPTools(cepPropsLocation);
 				break;
 			case ALL:
+				mainControl.testAuthentication();
+				mainControl.testCEPTools(cepPropsLocation);
 				break;
 			default:
 				// Exit
@@ -79,23 +85,38 @@ public class TestController {
 		username = newUsername;
 		password = newPassword;
 		
+		commonProps = CommonProperties.getInstance();
+		
+		whichBrowser = BrowserEnum.valueOf(commonProps.getBrowser());
+		String driverLocation = commonProps.getBrowserDriver();
+		
+		// unfortunately, for browsers other than Firefox, Selenium needs this system property set to find the actual browser driver
+		switch(whichBrowser) {
+		case INTERNETEXPLORER:
+			System.setProperty("webdriver.ie.driver", driverLocation);
+			break;
+		case CHROME:
+			System.setProperty("webdriver.chrome.driver", driverLocation);
+			break;
+		default:
+			// Do nothing
+			break;
+		}
+		
 		dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	}
 	
-	public void testAuthentication(String propertiesFileLocation) {
-		CommonProperties commonProps = CommonProperties.getInstance();
+	public void testAuthentication() {
 		
 		try {
 			setup();
-			
-			commonProps.loadConfiguration(propertiesFileLocation);
 			
 			String mainUser = commonProps.getMainUser();
 			String mainPassword = commonProps.getMainPassword();
 			String newUser = commonProps.getAltUser();
 			String newPassword = commonProps.getAltPassword();
 			
-			GlobusLogin gLogin = new GlobusLogin(hostname, initialWelcomePath, mainUser, mainPassword, true);
+			GlobusLogin gLogin = new GlobusLogin(hostname, initialWelcomePath, mainUser, mainPassword, true, whichBrowser);
 			boolean loginComplete;
 			
 			loginComplete = gLogin.testGlobus();
@@ -184,7 +205,7 @@ public class TestController {
 			String uploadpath = testProps.getUploadpath();
 			String searchpath = testProps.getSearchpath();
 			
-			CEPUploadTester upload = new CEPUploadTester(hostname, uploadpath, initialWelcomePath, username, password, true);
+			CEPUploadTester upload = new CEPUploadTester(hostname, uploadpath, initialWelcomePath, username, password, true, whichBrowser);
 			
 			upload.login(false);
 			upload.goToPage();
@@ -193,7 +214,7 @@ public class TestController {
 			upload.logout();
 			upload.close();
 			
-			CEPSearchTester search = new CEPSearchTester(hostname, searchpath, initialWelcomePath, username, password, true);
+			CEPSearchTester search = new CEPSearchTester(hostname, searchpath, initialWelcomePath, username, password, true, whichBrowser);
 
 			search.login(false);
 			search.goToPage();

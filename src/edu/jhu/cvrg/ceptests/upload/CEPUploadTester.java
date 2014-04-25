@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.GenericCEPTester;
 import edu.jhu.cvrg.ceptests.TestScenarioEnum;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
@@ -18,14 +19,20 @@ public final class CEPUploadTester extends GenericCEPTester {
 	private ArrayDeque<String> backButtonStack;
 
 	public CEPUploadTester(String site, String viewPath, String welcomePath,
+			String userName, String passWord, boolean loginRequired, BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+		backButtonStack = new ArrayDeque<String>();
+	}
+	
+	public CEPUploadTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
-		// TODO Auto-generated constructor stub
 		backButtonStack = new ArrayDeque<String>();
 	}
 	
 	public CEPUploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
 		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+		backButtonStack = new ArrayDeque<String>();
 	}
 
 	@Override

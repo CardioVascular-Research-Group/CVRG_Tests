@@ -12,6 +12,8 @@ public class CommonProperties {
 	private String mainPassword;
 	private String altUser;
 	private String altPassword;
+	private String browser;
+	private String browserdriver;
 	
 	private CommonProperties() {
 	       
@@ -39,6 +41,8 @@ public class CommonProperties {
 			mainPassword = props.getProperty("mainpassword", "confignotfound");
 			altUser = props.getProperty("altlogin", "confignotfound");
 			altPassword = props.getProperty("altpassword", "confignotfound");	
+			browser = props.getProperty("browser", "confignotfound");
+			browserdriver = props.getProperty("browserdriver", "confignotfound");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,5 +63,13 @@ public class CommonProperties {
 	
 	public String getAltPassword() {
 		return altPassword;
+	}
+	
+	public String getBrowser() {
+		return browser;
+	}
+	
+	public String getBrowserDriver() {
+		return browserdriver;
 	}
 }

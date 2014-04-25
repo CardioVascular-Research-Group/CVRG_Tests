@@ -8,14 +8,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 
 public class GlobusLogin extends BaseFunctions {
+	
+	public GlobusLogin(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired, BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
 
 	public GlobusLogin(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
-		// TODO Auto-generated constructor stub
 	}
 	public GlobusLogin(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
 		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
@@ -26,9 +30,14 @@ public class GlobusLogin extends BaseFunctions {
 		
 		// assume that the welcome screen will be both of the paths in this case 
 		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
-		// TODO Auto-generated constructor stub
 	}
 	
+	public GlobusLogin(String site, String welcomePath,
+			String userName, String passWord, boolean loginRequired,
+			BrowserEnum whichBrowser) {
+		this(site, welcomePath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
+
 	public boolean testGlobus(boolean newWindowNeeded) throws IOException {
 		this.login(newWindowNeeded);
 		

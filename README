@@ -1,7 +1,22 @@
 Instructions:
 
-Firefox must be installed on the machine that it will be run from.  Future versions will support other browsers but for
-now only Firefox is supported.
+Currently, Firefox 28, Internet Explorer 9, and Chrome 34.0.1846.116 m have been tested.  Future versions of these tests will include Opera and Safari.
+
+If using Firefox, proceed to the Running CVRG_Tests stage.
+
+If using a different browser, assuming that you have the browser installed, then follow these instructions first:
+
+-  Download the appropriate Selenium Driver for the browser, unzip it to a location of your choice
+
+Internet Explorer:  http://selenium-release.storage.googleapis.com/index.html
+Chrome:  http://chromedriver.storage.googleapis.com/index.html
+
+-  In the global_properties.config file, enter the full path where the executable file was placed the "browserdriver" field
+
+-  Change the "browser" field to the appropriate selection (the comments give the currently supported choices, which must be entered as stated)
+
+
+Running CVRG_Tests:
 
 This can either be compiled as an executable jar or run as a project within eclipse.
 

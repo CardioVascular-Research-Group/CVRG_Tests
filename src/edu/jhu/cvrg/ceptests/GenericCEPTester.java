@@ -8,6 +8,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.authenticationtests.*;
 
@@ -27,17 +28,27 @@ public abstract class GenericCEPTester extends BaseFunctions {
 	
 	protected GenericCEPTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
 		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
+		cepProps = CEPTestProperties.getInstance();
 	}
 	
+	protected GenericCEPTester(String site, String viewPath, String welcomePath,
+			String userName, String passWord, boolean loginRequired,
+			BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+		cepProps = CEPTestProperties.getInstance();
+	}
+
 	// This overridden version uses the GlobusLogin class for testing (no need to reinvent the wheel)
 	@Override
 	public final void login(boolean newWindowNeeded) {
 		GlobusLogin gLogin;
 		
 		if(newWindowNeeded) {
-			gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, newWindowNeeded);
+			// create new window
+			gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, newWindowNeeded, browser);
 		}
 		else {
+			// pass the current window that the portlet driver is using 
 			gLogin = new GlobusLogin(this.host, this.portletPage, this.welcomeScreen, this.username, this.password, this.portletDriver);
 		}
 		
