@@ -15,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.*;
 
 import com.opera.core.systems.OperaDriver;
@@ -222,6 +223,9 @@ public abstract class BaseFunctions {
 				settings.setCapability("opera.port", -1);
 				portletDriver = new OperaDriver(settings);
 			}
+			break;
+		case SAFARI:
+			portletDriver = new SafariDriver();
 			break;
 		default:
 			System.out.println("Unrecognized browser option in the global_properties.config file, reverting to Firefox");

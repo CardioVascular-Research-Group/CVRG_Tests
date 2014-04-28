@@ -100,9 +100,6 @@ public class TestController {
 		case CHROME:
 			System.setProperty("webdriver.chrome.driver", driverLocation);
 			break;
-		case OPERA12:
-
-			
 		default:
 			// Do nothing
 			break;
