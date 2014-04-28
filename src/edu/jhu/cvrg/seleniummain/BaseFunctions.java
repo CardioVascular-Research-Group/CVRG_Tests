@@ -14,15 +14,15 @@ package edu.jhu.cvrg.seleniummain;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.opera.core.systems.OperaDriver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 
 public abstract class BaseFunctions {
@@ -37,6 +37,7 @@ public abstract class BaseFunctions {
 	protected WebDriver portletDriver;
 	protected LogfileManager logger = LogfileManager.getInstance();
 	protected boolean loginNeeded;
+	protected CommonProperties commonProps;
 	protected BrowserEnum browser;
 	
 	protected BaseFunctions(String site, String viewPath, String welcomePath, String userName, String passWord, boolean newWindowRequired, BrowserEnum whichBrowser) {
@@ -47,6 +48,7 @@ public abstract class BaseFunctions {
 		password = passWord;
 		loginNeeded = newWindowRequired;
 		browser = whichBrowser;
+		commonProps = CommonProperties.getInstance();
 		
 		portletLogMessages = new ArrayList<String>();
 		seleniumLogMessages = new ArrayList<String>();
@@ -55,21 +57,9 @@ public abstract class BaseFunctions {
 		// (specifically third party ones for Chrome and Safari), this will be changed to a switch statement
 		// to select a web driver (based on the enumeration value)
 		if(newWindowRequired) {
-			switch(browser) {
-			case FIREFOX:
-				portletDriver = new FirefoxDriver();
-				break;
-			case INTERNETEXPLORER:
-				portletDriver = new InternetExplorerDriver();
-				break;
-			case CHROME:
-				portletDriver = new ChromeDriver();
-				break;
-			default:
-				System.out.println("Unrecognized browser option in the global_properties.config file, reverting to Firefox");
-				portletDriver = new FirefoxDriver();
-				break;
-			}
+			
+			this.loadNewBrowserTab();
+
 			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		}
 		
@@ -94,12 +84,17 @@ public abstract class BaseFunctions {
 	
 	public void login(boolean newWindowNeeded) {
 		if(newWindowNeeded) {
-			portletDriver = new FirefoxDriver();
+			this.loadNewBrowserTab();
 		}
 		
 		portletDriver.get(host + "/" + welcomeScreen);
 		
-		portletDriver.manage().window().maximize();
+		// do not maximize an Opera browser because the feature was never implemented
+		try {
+			portletDriver.manage().window().maximize();
+		} catch(UnsupportedOperationException uo) {
+			seleniumLogMessages.add("The Opera browser is being used and a method that has not been implemented in its driver has been used.  Here is more information:  \n" + LogfileManager.extractStackTrace(uo));
+		}
 		
 		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);	
 		
@@ -205,6 +200,34 @@ public abstract class BaseFunctions {
 	
 	public WebDriver getDriver() {
 		return portletDriver;
+	}
+	
+	protected void loadNewBrowserTab() {
+		switch(this.browser) {
+		case FIREFOX:
+			portletDriver = new FirefoxDriver();
+			break;
+		case INTERNETEXPLORER:
+			portletDriver = new InternetExplorerDriver();
+			break;
+		case CHROME:
+			portletDriver = new ChromeDriver();
+			break;
+		case OPERA12:
+			String driverLocation = commonProps.getBrowserDriver();
+			if(driverLocation != null) {
+				DesiredCapabilities settings = DesiredCapabilities.opera();
+				settings.setCapability("opera.binary", driverLocation);
+				settings.setCapability("opera.profile", "");
+				settings.setCapability("opera.port", -1);
+				portletDriver = new OperaDriver(settings);
+			}
+			break;
+		default:
+			System.out.println("Unrecognized browser option in the global_properties.config file, reverting to Firefox");
+			portletDriver = new FirefoxDriver();
+			break;
+		}
 	}
 
 

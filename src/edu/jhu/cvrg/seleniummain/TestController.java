@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import edu.jhu.cvrg.authenticationtests.GlobusLogin;
 import edu.jhu.cvrg.ceptests.CEPException;
 import edu.jhu.cvrg.ceptests.CEPTestProperties;
@@ -90,7 +92,7 @@ public class TestController {
 		whichBrowser = BrowserEnum.valueOf(commonProps.getBrowser());
 		String driverLocation = commonProps.getBrowserDriver();
 		
-		// unfortunately, for browsers other than Firefox, Selenium needs this system property set to find the actual browser driver
+		// unfortunately, for Inernet Explorer and Chrome, Selenium needs this system property set to find the actual browser driver
 		switch(whichBrowser) {
 		case INTERNETEXPLORER:
 			System.setProperty("webdriver.ie.driver", driverLocation);
@@ -98,6 +100,9 @@ public class TestController {
 		case CHROME:
 			System.setProperty("webdriver.chrome.driver", driverLocation);
 			break;
+		case OPERA12:
+
+			
 		default:
 			// Do nothing
 			break;
