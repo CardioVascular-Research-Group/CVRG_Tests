@@ -12,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.waveformtests.WaveformTestProperties;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
@@ -23,15 +24,11 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	
 	private DisplayPanelEnum currentPage;
 	private WaveformTestProperties testProps;
-
-	/**
-	 * @param site
-	 * @param viewPath
-	 * @param welcomePath
-	 * @param logfileLocation
-	 * @param userName
-	 * @param passWord
-	 */
+	
+	public VisualizeTester(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired, BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
+	
 	public VisualizeTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
@@ -45,6 +42,13 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
 	}
 	
+	public VisualizeTester(String site, String welcomePath,
+			String userName, String passWord, boolean loginRequired) {
+		
+		// assume that the welcome screen will be both of the paths in this case 
+		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
+	}
+	
 	public void testVisualizeViews() {
 		goToPage();
 		selectECGFromTree();
@@ -54,7 +58,8 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	}
 	
 	public void pickLead() {
-				
+		// TODO:  Select a lead graph from the dygraph screen.  Figure out some way to get the 
+		//			dygraphs to work in Selenium
 	}
 
 	public void selectECGFromTree() {

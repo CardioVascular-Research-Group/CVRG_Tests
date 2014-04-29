@@ -14,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
@@ -30,6 +31,11 @@ public class UploadTester extends BaseFunctions {
 	 * @param welcomePath
 	 * @param logfileLocation
 	 */
+	
+	public UploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired, BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
+	
 	public UploadTester(String site, String viewPath, String welcomePath,
 			String username, String password, boolean loginRequired) {
 		super(site, viewPath, welcomePath, username, password, loginRequired);
@@ -39,6 +45,13 @@ public class UploadTester extends BaseFunctions {
 	
 	public UploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
 		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+	}
+	
+	public UploadTester(String site, String welcomePath,
+			String userName, String passWord, boolean loginRequired) {
+		
+		// assume that the welcome screen will be both of the paths in this case 
+		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
 	}
 	
 	public void uploadFile() throws IOException {
@@ -85,7 +98,8 @@ public class UploadTester extends BaseFunctions {
 			}
 		}
 		
-		// Test uploading to an existing folder
+		// TODO:  Perhaps finding a way to upload a file may be possible in the future, but as of right now Selenium does not allow for this
+		// When an operating system 
 	}
 
 }

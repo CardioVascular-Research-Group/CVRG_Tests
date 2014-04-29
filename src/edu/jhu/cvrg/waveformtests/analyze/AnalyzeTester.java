@@ -14,12 +14,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import edu.jhu.cvrg.seleniummain.BaseFunctions;
+import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
 import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
 public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 
+	public AnalyzeTester(String site, String viewPath, String welcomePath, String userName, String passWord, boolean loginRequired, BrowserEnum whichBrowser) {
+		super(site, viewPath, welcomePath, userName, passWord, loginRequired, whichBrowser);
+	}
+	
 	public AnalyzeTester(String site, String viewPath, String welcomePath,
 			String userName, String passWord, boolean loginRequired) {
 		super(site, viewPath, welcomePath, userName, passWord, loginRequired);
@@ -28,6 +33,13 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 	
 	public AnalyzeTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
 		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+	}
+	
+	public AnalyzeTester(String site, String welcomePath,
+			String userName, String passWord, boolean loginRequired) {
+		
+		// assume that the welcome screen will be both of the paths in this case 
+		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
 	}
 	
 	public void analyzeOneECG() throws IOException {
@@ -90,7 +102,7 @@ public class AnalyzeTester extends BaseFunctions implements UIComponentChecks{
 
 	@Override
 	public void validateButtons() {
-		// TODO validate all buttons and checkboxes
+		// TODO validate all buttons
 		
 	}
 	
