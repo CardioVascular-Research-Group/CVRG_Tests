@@ -38,7 +38,7 @@ public abstract class GenericCEPTester extends BaseFunctions {
 		cepProps = CEPTestProperties.getInstance();
 	}
 
-	// This overridden version uses the GlobusLogin class for testing (no need to reinvent the wheel)
+	// This overridden version uses the GlobusLogin class for testing 
 	@Override
 	public final void login(boolean newWindowNeeded) {
 		GlobusLogin gLogin;

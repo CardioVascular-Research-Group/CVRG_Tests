@@ -4,7 +4,6 @@
 package edu.jhu.cvrg.waveformtests.upload;
 
 import java.util.concurrent.TimeUnit;
-import java.awt.Robot;
 import java.io.IOException;
 
 import org.openqa.selenium.By;
@@ -17,7 +16,6 @@ import edu.jhu.cvrg.seleniummain.BaseFunctions;
 import edu.jhu.cvrg.seleniummain.BrowserEnum;
 import edu.jhu.cvrg.seleniummain.LogfileManager;
 import edu.jhu.cvrg.seleniummain.TestNameEnum;
-import edu.jhu.cvrg.waveformtests.UIComponentChecks;
 
 /**
  * @author bbenite1
@@ -40,18 +38,10 @@ public class UploadTester extends BaseFunctions {
 			String username, String password, boolean loginRequired) {
 		super(site, viewPath, welcomePath, username, password, loginRequired);
 
-		// TODO More code may be required here in the future
 	}
 	
 	public UploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
-		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
-	}
-	
-	public UploadTester(String site, String welcomePath,
-			String userName, String passWord, boolean loginRequired) {
-		
-		// assume that the welcome screen will be both of the paths in this case 
-		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 	}
 	
 	public void uploadFile() throws IOException {
@@ -61,7 +51,7 @@ public class UploadTester extends BaseFunctions {
 		
 		try {
 			// Test creating a new folder
-			portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			portletDriver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 			
 			WebElement newFolderInput = portletDriver.findElement(By.id(newFolderBox));
 			

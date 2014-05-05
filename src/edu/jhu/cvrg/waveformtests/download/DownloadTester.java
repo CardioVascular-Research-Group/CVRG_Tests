@@ -20,14 +20,7 @@ public class DownloadTester extends BaseFunctions implements UIComponentChecks{
 	}
 	
 	public DownloadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
-		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
-	}
-	
-	public DownloadTester(String site, String welcomePath,
-			String userName, String passWord, boolean loginRequired) {
-		
-		// assume that the welcome screen will be both of the paths in this case 
-		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 	}
 
 	@Override

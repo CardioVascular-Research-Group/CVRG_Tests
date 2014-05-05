@@ -31,7 +31,7 @@ public final class CEPUploadTester extends GenericCEPTester {
 	}
 	
 	public CEPUploadTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
-		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 		backButtonStack = new ArrayDeque<String>();
 	}
 

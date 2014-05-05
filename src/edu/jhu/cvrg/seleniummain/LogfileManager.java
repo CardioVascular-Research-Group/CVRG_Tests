@@ -53,28 +53,18 @@ public class LogfileManager {
 				break;
 			case LOGIN:
 				logWriter.write("\n** Results from Authentication **\n");
-				logWriter.write("Tests Passed:  " + loginSuccesses + "\n");
-				logWriter.write("Tests Failed:  " + loginFails + "\n");
 				break;
 			case WAVEFORMUPLOAD:
 				logWriter.write("\n** Results from Upload **\n");
-				logWriter.write("Tests Passed:  " + uploadSuccesses + "\n");
-				logWriter.write("Tests Failed:  " + uploadFails + "\n");
 				break;
 			case WAVEFORMVISUALIZE:
 				logWriter.write("\n** Results from Visualize **\n");
-				logWriter.write("Tests Passed:  " + visualizeSuccesses + "\n");
-				logWriter.write("Tests Failed:  " + visualizeFails + "\n");
 				break;
 			case WAVEFORMANALYZE:
 				logWriter.write("\n** Results from Analyze **\n");
-				logWriter.write("Tests Passed:  " + analyzeSuccesses + "\n");
-				logWriter.write("Tests Failed:  " + analyzeFails + "\n");
 				break;
 			case WAVEFORMDOWNLOAD:
 				logWriter.write("\n** Results from Download **\n");
-				logWriter.write("Tests Passed:  " + downloadSuccesses + "\n");
-				logWriter.write("Tests Failed:  " + downloadFails + "\n");
 				break;
 			case GLOBUS:
 				logWriter.write("\n** Results from Globus Authenticator **\n");
@@ -85,7 +75,7 @@ public class LogfileManager {
 			case CEPUPLOAD:
 				break;
 			default:
-				logWriter.write("\n* Other Waveform Results *\n");
+				logWriter.write("\n* Other Test Results *\n");
 		}
 		
 		for(String logMessage : logMessages) {
@@ -97,6 +87,7 @@ public class LogfileManager {
 		logWriter.close();
 	}
 	
+	// By default, if the same filename is given from the command line as an existing one, the file will be appended
 	private void openFile() throws IOException {
 		File logFileHandle = new File(logfileLocation);
 		

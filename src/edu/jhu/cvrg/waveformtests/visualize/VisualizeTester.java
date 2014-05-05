@@ -39,14 +39,7 @@ public class VisualizeTester extends BaseFunctions implements UIComponentChecks{
 	}
 	
 	public VisualizeTester(String site, String viewPath, String welcomePath, String userName, String passWord, WebDriver existingDriver) {
-		super(passWord, passWord, passWord, passWord, passWord, existingDriver);
-	}
-	
-	public VisualizeTester(String site, String welcomePath,
-			String userName, String passWord, boolean loginRequired) {
-		
-		// assume that the welcome screen will be both of the paths in this case 
-		super(site, welcomePath, welcomePath, userName, passWord, loginRequired);
+		super(site, viewPath, welcomePath, userName, passWord, existingDriver);
 	}
 	
 	public void testVisualizeViews() {

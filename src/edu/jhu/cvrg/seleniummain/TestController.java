@@ -63,6 +63,7 @@ public class TestController {
 				mainControl.testAuthentication();
 				break;
 			case WAVEFORM:
+				mainControl.testWaveform(waveformPropsLocation);
 				break;
 			case CEP:
 				mainControl.testCEPTools(cepPropsLocation);
@@ -70,6 +71,7 @@ public class TestController {
 			case ALL:
 				mainControl.testAuthentication();
 				mainControl.testCEPTools(cepPropsLocation);
+				mainControl.testWaveform(waveformPropsLocation);
 				break;
 			default:
 				// Exit
