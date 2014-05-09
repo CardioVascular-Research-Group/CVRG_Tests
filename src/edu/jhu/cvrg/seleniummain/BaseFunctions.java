@@ -84,7 +84,10 @@ public abstract class BaseFunctions {
 	}
 	
 	public void login(boolean newWindowNeeded) {
+		System.out.println("Begin login");
+		
 		if(newWindowNeeded) {
+			System.out.println("Needed to open a new browser window");
 			this.loadNewBrowserTab();
 		}
 		
@@ -99,25 +102,46 @@ public abstract class BaseFunctions {
 		
 		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);	
 		
+		System.out.println("Clicking sign in link");
 		portletDriver.findElement(By.id("sign-in")).click();
 		
-		portletDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		portletDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
+		if(this.browser.equals(BrowserEnum.SAFARI)) {
+			System.out.println("Browser has been recognized as Safari");
+			portletDriver.navigate().refresh();
+		}
+		
+		System.out.println("refreshing page");
+		portletDriver.navigate().refresh();
+		
+		System.out.println("Getting web elements");
 		WebElement usernameBox = portletDriver.findElement(By.id("_58_login"));
 		WebElement passwordBox = portletDriver.findElement(By.id("_58_password"));
 		
+		System.out.println("Clicking username box");
 		usernameBox.click();
+		
+		System.out.println("Clearing username box");
 		usernameBox.clear();
+		
+		System.out.println("Entering username");
 		usernameBox.sendKeys(username);
 		
+		System.out.println("Clicking password box");
 		passwordBox.click();
+		
+		System.out.println("Clearing password box");
 		passwordBox.clear();
+		
+		System.out.println("Entering password");
 		passwordBox.sendKeys(password);
 		
 		portletLogMessages.add("Logging in with username " + username);
 		
 		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		
+		System.out.println("Clicking sign in button");
 		portletDriver.findElement(By.xpath("//input[@value='Sign In']")).click();
 		
 		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
