@@ -89,7 +89,12 @@ public abstract class BaseFunctions {
 			this.loadNewBrowserTab();
 		}
 		
-		portletDriver.get("http://" + host + "/" + welcomeScreen);
+		if(!(host.contains("http://"))) {
+			portletDriver.get("http://" + host + "/" + welcomeScreen);
+		}
+		else {
+			portletDriver.get(host + "/" + welcomeScreen);
+		}
 		
 		// do not maximize an Opera browser because the feature was never implemented
 		try {
@@ -152,7 +157,12 @@ public abstract class BaseFunctions {
 	}
 	
 	public void goToPage() {
-		portletDriver.get("http://" + host + "/" + portletPage);
+		if(!(host.contains("http://"))) {
+			portletDriver.get("http://" + host + "/" + portletPage);
+		}
+		else {
+			portletDriver.get(host + "/" + portletPage);
+		}
 		
 		portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
