@@ -125,7 +125,8 @@ public class GlobusLogin extends BaseFunctions {
 		// A check for a list of elements is present since that will give an empty list instead of an exception.
 		// This makes it easier for the program to continue to proceed
 		if(!(portletDriver.findElements(By.xpath("//div[@class='portlet-msg-error']")).isEmpty())) {
-			System.out.println("Portlet error message found saying " + portletLogMessages.add("Error submitting custom fields, the error is:  " + portletDriver.findElement(By.xpath("//div[@class='portlet-msg-error']")).getText()));
+			System.out.println("Portlet error message found saying " + "Error submitting custom fields, the error is:  " + portletDriver.findElement(By.xpath("//div[@class='portlet-msg-error']")).getText());
+			portletLogMessages.add("Error submitting custom fields, the error is:  " + portletDriver.findElement(By.xpath("//div[@class='portlet-msg-error']")).getText());
 			return false;
 		}
 		

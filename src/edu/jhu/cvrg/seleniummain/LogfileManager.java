@@ -73,6 +73,10 @@ public class LogfileManager {
 				logWriter.write("\n** Results from CEP Tools Search Portlet **\n");
 				break;
 			case CEPUPLOAD:
+				logWriter.write("\n** Results from CEP Tools Upload Portlet **\n");
+				break;
+			case CEPVIEW:
+				logWriter.write("\n** Results from CEP Tools View Publications Portlet **\n");
 				break;
 			default:
 				logWriter.write("\n* Other Test Results *\n");
