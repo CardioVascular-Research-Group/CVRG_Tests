@@ -175,39 +175,6 @@ public abstract class BaseFunctions {
 		return host;
 	}
 	
-	/**
-	 * Checks selection and expansion/condensing capabilities in the folder tree.  Note:  This does not check the validity
-	 * of anything stored in the tree
-	 */
-	public void validateFolderTree() {
-		try {
-			List<WebElement> folderArrows = portletDriver.findElements(By.className("ui-icon-triangle-1-e"));
-			
-			while(!(folderArrows.isEmpty())) { 
-				
-				for(WebElement folderArrow : folderArrows) {
-					folderArrow.click();
-					portletDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-				}
-				
-				folderArrows = portletDriver.findElements(By.className("ui-icon-triangle-1-e"));
-			}
-			
-			portletDriver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-			
-		} catch(StaleElementReferenceException ser) {
-			ser.printStackTrace();
-			return;
-		} catch(IndexOutOfBoundsException iob) {
-			iob.printStackTrace();
-			return;
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-				
-	}	
-	
 	public boolean loginNeeded() {
 		return loginNeeded();
 	}
